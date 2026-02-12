@@ -6,139 +6,55 @@
     <title>위기의 디자이너들 | CRISIS DESIGNERS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Noto+Sans+KR:wght@300;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Noto+Sans+KR:wght@100;900&display=swap');
+
+        :root { --neon: #ff5f00; --neon-rgba: rgba(255, 95, 0, 0.6); }
 
         body, html {
             margin: 0; padding: 0;
             background-color: #000;
             color: #fff;
             font-family: 'Noto Sans KR', sans-serif;
+            overflow-x: hidden;
+            cursor: crosshair;
         }
 
-        /* [배경] 레퍼런스 이미지의 웅장한 느낌 재현 */
+        /* --- 히어로 섹션 애니메이션 --- */
         .hero {
             position: relative;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            background-image: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.9)), 
-                              url('https://images.unsplash.com/photo-1614850523296-d8c1af93d400?auto=format&fit=crop&q=80&w=2070');
+            overflow: hidden;
+            background: #000;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: -5%; left: -5%; width: 110%; height: 110%;
+            background-image: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.9)), 
+                              url('background.jpg'); /* 이미지 경로 확인 */
             background-size: cover;
             background-position: center;
-            background-attachment: fixed;
+            transition: transform 0.1s ease-out;
+            z-index: 1;
         }
 
-        /* [중앙 박스] 오타 수정: 위기의 디자이너들 */
+        /* 마우스 스포트라이트 */
+        .spotlight {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), transparent 10%, rgba(0,0,0,0.85) 40%);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        /* 메인 프레임 & 글리치 */
         .main-frame {
+            position: relative;
             z-index: 10;
             padding: 4rem;
-            border: 1px solid rgba(255, 95, 0, 0.4);
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(15px);
             text-align: center;
-            box-shadow: 0 0 50px rgba(255, 95, 0, 0.1);
-        }
-
-        .neon-title {
-            font-family: 'Orbitron', 'Noto Sans KR', sans-serif;
-            font-size: clamp(2.5rem, 8vw, 5rem);
-            color: #ff5f00;
-            text-shadow: 0 0 15px #ff5f00, 0 0 30px #ff5f00;
-            font-weight: 900;
-            margin: 0;
-            letter-spacing: -0.02em;
-        }
-
-        /* [피드] 카드 4개 복구 및 디자인 강화 */
-        .feed-section {
-            background: #050505;
-            padding: 120px 20px;
-        }
-
-        .crisis-card {
-            background: #111;
-            border: 1px solid #222;
-            padding: 2rem;
-            position: relative;
-            transition: 0.3s;
-        }
-
-        .crisis-card:hover {
-            border-color: #ff5f00;
-            box-shadow: 0 0 30px rgba(255, 95, 0, 0.1);
-            transform: translateY(-5px);
-        }
-
-        .card-tag {
-            font-size: 10px;
-            color: #ff5f00;
-            letter-spacing: 0.3em;
-            font-weight: bold;
-        }
-
-        .snap-container {
-            height: 100vh;
-            overflow-y: auto;
-            scroll-snap-type: y mandatory;
-        }
-        section { scroll-snap-align: start; }
-    </style>
-</head>
-<body>
-
-<div class="snap-container">
-    <section class="hero">
-        <div class="main-frame">
-            <p class="text-[10px] tracking-[1.5em] text-orange-500/60 mb-8 uppercase font-bold">The Designer's Doomsday</p>
-            <h1 class="neon-title">위기의 디자이너들</h1>
-            <div class="w-16 h-[1px] bg-orange-500/50 mx-auto my-8"></div>
-            <p class="text-orange-500 tracking-[0.6em] text-[10px] font-bold uppercase">Live AI Threat Level: Extreme</p>
-        </div>
-    </section>
-
-    <section class="feed-section">
-        <div class="max-w-6xl mx-auto">
-            <h2 class="text-zinc-800 text-[10px] tracking-[2.5em] text-center mb-24 font-bold uppercase">Threat Analysis Feed</h2>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="feed-container">
-                </div>
-        </div>
-    </section>
-</div>
-
-<script>
-    const tools = [
-        { name: "Midjourney v6.1", date: "2026.02.10", desc: "극사실주의 텍스트 렌더링 완성. 상업 사진 작가 위기.", level: 85 },
-        { name: "Sora Video Gen", date: "2026.02.05", desc: "1분 이상의 고화질 물리 법칙 시뮬레이션 영상 생성.", level: 92 },
-        { name: "Figma AI Copilot", date: "2026.01.28", desc: "와이어프레임 자동 생성 및 디자인 시스템 일관성 관리.", level: 65 },
-        { name: "Adobe Firefly Video", date: "2026.01.15", desc: "기존 영상 소스 자동 편집 및 배경 확장 기능.", level: 78 }
-    ];
-
-    const container = document.getElementById('feed-container');
-
-    tools.forEach(tool => {
-        container.innerHTML += `
-            <div class="crisis-card group">
-                <div class="flex justify-between items-start mb-8">
-                    <div>
-                        <span class="card-tag uppercase">${tool.date} UPDATE</span>
-                        <h3 class="text-3xl font-black mt-2 tracking-tighter">${tool.name}</h3>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-[40px] font-black text-orange-600 leading-none">${tool.level}%</p>
-                        <p class="text-[9px] text-zinc-600 tracking-tighter mt-1 uppercase font-bold">Threat Index</p>
-                    </div>
-                </div>
-                <p class="text-zinc-500 text-sm leading-relaxed mb-10 h-10">"${tool.desc}"</p>
-                <div class="flex gap-4 pt-6 border-t border-zinc-900">
-                    <button class="bg-orange-600 text-black font-bold text-[10px] px-6 py-2 hover:bg-white transition-colors uppercase">Vote Crisis</button>
-                    <button class="border border-zinc-800 text-zinc-600 text-[10px] px-6 py-2 hover:text-white transition-colors uppercase">Official Site</button>
-                </div>
-            </div>
-        `;
-    });
-</script>
-
-</body>
-</html>
+            border: 1px solid rgba(255, 95, 0, 0.2);
+            background: rgba(0, 0, 0, 0.
