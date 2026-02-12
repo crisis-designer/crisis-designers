@@ -19,7 +19,7 @@
             cursor: crosshair;
         }
 
-        /* --- 히어로 섹션 애니메이션 --- */
+        /* --- 히어로 섹션 --- */
         .hero {
             position: relative;
             height: 100vh;
@@ -32,12 +32,14 @@
 
         .hero-bg {
             position: absolute;
-            top: -5%; left: -5%; width: 110%; height: 110%;
-            background-image: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.9)), 
-                              url('background.jpg'); /* 이미지 경로 확인 */
+            top: -10%; left: -10%; width: 120%; height: 120%;
+            /* 고정된 이미지 URL 사용 (경로 깨짐 방지) */
+            background-image: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.9)), 
+                              url('https://api.deepai.org/job-view-file/6a928236-8e5c-4a3e-9080-6060c5a17686/outputs/output.jpg'); 
+            /* 위 URL은 임시입니다. 본인이 생성한 이미지를 호스팅 서비스에 올려서 해당 주소로 바꾸면 완벽합니다. */
             background-size: cover;
             background-position: center;
-            transition: transform 0.1s ease-out;
+            transition: transform 0.15s ease-out;
             z-index: 1;
         }
 
@@ -45,16 +47,181 @@
         .spotlight {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), transparent 10%, rgba(0,0,0,0.85) 40%);
+            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), transparent 10%, rgba(0,0,0,0.9) 45%);
             z-index: 2;
             pointer-events: none;
         }
 
-        /* 메인 프레임 & 글리치 */
         .main-frame {
             position: relative;
             z-index: 10;
-            padding: 4rem;
+            padding: clamp(2rem, 5vw, 5rem);
             text-align: center;
-            border: 1px solid rgba(255, 95, 0, 0.2);
-            background: rgba(0, 0, 0, 0.
+            border: 1px solid rgba(255, 95, 0, 0.15);
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 0 50px rgba(0,0,0,1);
+        }
+
+        .neon-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2.5rem, 12vw, 7rem);
+            color: var(--neon);
+            text-shadow: 0 0 15px var(--neon), 0 0 30px var(--neon-rgba);
+            font-weight: 900;
+            line-height: 0.9;
+            margin-bottom: 1.5rem;
+        }
+
+        /* 텍스트 글리치 효과 */
+        .glitch-hover:hover {
+            animation: glitch-skew 0.2s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-skew {
+            0% { transform: skew(2deg); text-shadow: 2px 0 red; }
+            50% { transform: skew(-3deg); text-shadow: -2px 0 blue; }
+            100% { transform: skew(1deg); }
+        }
+
+        /* --- 카드 섹션 (CRT & 네온) --- */
+        .card {
+            background: #080808;
+            border: 1px solid #1a1a1a;
+            padding: 3rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .card:hover {
+            border-color: var(--neon);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(255, 95, 0, 0.1);
+        }
+
+        /* 카드 내부 지지직거리는 가로줄(Scanline) */
+        .scanline {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(
+                rgba(18, 16, 16, 0) 50%, 
+                rgba(255, 95, 0, 0.05) 50%
+            );
+            background-size: 100% 4px;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        .snap-container { height: 100vh; overflow-y: auto; scroll-snap-type: y mandatory; }
+        section { scroll-snap-align: start; min-height: 100vh; }
+
+    </style>
+</head>
+<body>
+
+<div class="snap-container">
+    <section class="hero" id="hero-section">
+        <div class="hero-bg" id="hero-bg"></div>
+        <div class="spotlight" id="mouse-spotlight"></div>
+        
+        <div class="main-frame">
+            <p class="text-[10px] tracking-[2em] text-orange-500/40 mb-6 font-bold uppercase">Critical Security Alert</p>
+            <h1 class="neon-title glitch-hover">위기의<br>디자이너들</h1>
+            <div class="flex items-center justify-center gap-4 mt-10">
+                <span class="h-[1px] w-12 bg-orange-900"></span>
+                <p class="text-orange-600 tracking-[0.8em] text-[11px] font-black uppercase">Archive.2026</p>
+                <span class="h-[1px] w-12 bg-orange-900"></span>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-black py-32 px-6 flex items-center">
+        <div class="max-w-6xl mx-auto w-full">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div class="card group">
+                    <div class="scanline"></div>
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-end mb-8">
+                            <h3 class="text-4xl font-black text-zinc-200 group-hover:text-orange-500 transition-colors">AI DOMINANCE</h3>
+                            <div class="text-right">
+                                <span class="text-5xl font-black text-orange-600 counter" data-target="87">0</span><span class="text-orange-600 text-xl">%</span>
+                            </div>
+                        </div>
+                        <p class="text-zinc-500 leading-relaxed mb-10 text-sm">"생성형 AI의 발전으로 인간 디자이너의 가용 영역이 매분 매초 축소되고 있습니다. 시스템은 현재 인간을 배제한 창작 프로세스를 구축 중입니다."</p>
+                        <div class="pt-6 border-t border-zinc-900 flex justify-between items-center">
+                            <span class="text-[10px] text-zinc-700 font-bold uppercase tracking-widest">Protocol: Override</span>
+                            <button class="px-6 py-2 bg-transparent border border-zinc-800 text-[10px] font-bold hover:bg-orange-600 hover:border-orange-600 hover:text-black transition-all">VIEW DATA</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card group">
+                    <div class="scanline"></div>
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-end mb-8">
+                            <h3 class="text-4xl font-black text-zinc-200 group-hover:text-orange-500 transition-colors">SORA ENGINE</h3>
+                            <div class="text-right">
+                                <span class="text-5xl font-black text-orange-600 counter" data-target="94">0</span><span class="text-orange-600 text-xl">%</span>
+                            </div>
+                        </div>
+                        <p class="text-zinc-500 leading-relaxed mb-10 text-sm">"비디오 생성 엔진 Sora의 완전 배포가 임박했습니다. 현실과 가상의 경계가 완전히 붕괴되었으며, 시각 데이터의 신뢰도는 0에 수렴합니다."</p>
+                        <div class="pt-6 border-t border-zinc-900 flex justify-between items-center">
+                            <span class="text-[10px] text-zinc-700 font-bold uppercase tracking-widest">Status: Terminal</span>
+                            <button class="px-6 py-2 bg-transparent border border-zinc-800 text-[10px] font-bold hover:bg-orange-600 hover:border-orange-600 hover:text-black transition-all">VIEW DATA</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    // 1. 히어로 인터랙션 (마우스 위치 감지)
+    const hero = document.getElementById('hero-section');
+    const heroBg = document.getElementById('hero-bg');
+    const spotlight = document.getElementById('mouse-spotlight');
+
+    hero.addEventListener('mousemove', (e) => {
+        const x = (e.clientX / window.innerWidth) * 100;
+        const y = (e.clientY / window.innerHeight) * 100;
+
+        // 스포트라이트 좌표 설정
+        spotlight.style.setProperty('--x', `${x}%`);
+        spotlight.style.setProperty('--y', `${y}%`);
+
+        // 배경 패럴랙스 (부드럽게 밀리는 효과)
+        const moveX = (e.clientX - window.innerWidth / 2) / 25;
+        const moveY = (e.clientY - window.innerHeight / 2) / 25;
+        heroBg.style.transform = `translate(${-moveX}px, ${-moveY}px) scale(1.05)`;
+    });
+
+    // 2. 스크롤 시 숫자 카운트업
+    const countObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const counters = entry.target.querySelectorAll('.counter');
+                counters.forEach(c => {
+                    const target = +c.getAttribute('data-target');
+                    let current = 0;
+                    const timer = setInterval(() => {
+                        current += Math.ceil(target / 15);
+                        if (current >= target) {
+                            c.innerText = target;
+                            clearInterval(timer);
+                        } else {
+                            c.innerText = current;
+                        }
+                    }, 50);
+                });
+            }
+        });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('section').forEach(s => countObserver.observe(s));
+</script>
+
+</body>
+</html>
