@@ -3,224 +3,185 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>위기의 디자이너들 | CRISIS DESIGNERS</title>
+    <title>CRISIS DESIGNERS | 위기의 디자이너들</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Noto+Sans+KR:wght@100;900&display=swap');
 
-        :root { --neon: #ff5f00; --neon-rgba: rgba(255, 95, 0, 0.6); }
+        :root { --neon: #ff5f00; }
 
-        body, html {
-            margin: 0; padding: 0;
+        body {
             background-color: #000;
             color: #fff;
+            margin: 0;
             font-family: 'Noto Sans KR', sans-serif;
             overflow-x: hidden;
-            cursor: crosshair;
         }
 
         /* --- 히어로 섹션 --- */
-        .hero {
+        #hero {
             position: relative;
             height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            width: 100%;
             overflow: hidden;
-            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .hero-bg {
             position: absolute;
             top: -10%; left: -10%; width: 120%; height: 120%;
-            /* 고정된 이미지 URL 사용 (경로 깨짐 방지) */
-            background-image: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.9)), 
-                              url('https://api.deepai.org/job-view-file/6a928236-8e5c-4a3e-9080-6060c5a17686/outputs/output.jpg'); 
-            /* 위 URL은 임시입니다. 본인이 생성한 이미지를 호스팅 서비스에 올려서 해당 주소로 바꾸면 완벽합니다. */
+            /* 검증된 고화질 배경 이미지 주소로 교체 */
+            background-image: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.9)), 
+                              url('https://images.unsplash.com/photo-1614850523296-d8c1af93d400?q=80&w=2070&auto=format&fit=crop');
             background-size: cover;
             background-position: center;
-            transition: transform 0.15s ease-out;
             z-index: 1;
+            will-change: transform;
         }
 
-        /* 마우스 스포트라이트 */
         .spotlight {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), transparent 10%, rgba(0,0,0,0.9) 45%);
+            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), transparent 0%, rgba(0,0,0,0.95) 35%);
             z-index: 2;
             pointer-events: none;
         }
 
-        .main-frame {
+        .content-box {
             position: relative;
             z-index: 10;
-            padding: clamp(2rem, 5vw, 5rem);
             text-align: center;
-            border: 1px solid rgba(255, 95, 0, 0.15);
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(15px);
-            box-shadow: 0 0 50px rgba(0,0,0,1);
+            padding: 2rem;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 95, 0, 0.2);
         }
 
-        .neon-title {
+        .title {
             font-family: 'Orbitron', sans-serif;
-            font-size: clamp(2.5rem, 12vw, 7rem);
+            font-size: clamp(3rem, 10vw, 6rem);
+            line-height: 1;
             color: var(--neon);
-            text-shadow: 0 0 15px var(--neon), 0 0 30px var(--neon-rgba);
-            font-weight: 900;
-            line-height: 0.9;
-            margin-bottom: 1.5rem;
+            text-shadow: 0 0 20px var(--neon);
+            animation: glitch 1s infinite;
         }
 
-        /* 텍스트 글리치 효과 */
-        .glitch-hover:hover {
-            animation: glitch-skew 0.2s infinite linear alternate-reverse;
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); text-shadow: 2px 0 red, -2px 0 blue; }
+            60% { transform: translate(2px, 2px); }
+            100% { transform: translate(0); }
         }
 
-        @keyframes glitch-skew {
-            0% { transform: skew(2deg); text-shadow: 2px 0 red; }
-            50% { transform: skew(-3deg); text-shadow: -2px 0 blue; }
-            100% { transform: skew(1deg); }
+        /* --- 카드 디자인 --- */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
-        /* --- 카드 섹션 (CRT & 네온) --- */
         .card {
-            background: #080808;
-            border: 1px solid #1a1a1a;
-            padding: 3rem;
+            background: #0a0a0a;
+            border: 1px solid #222;
+            padding: 2rem;
             position: relative;
+            transition: 0.3s;
             overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .card:hover {
             border-color: var(--neon);
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(255, 95, 0, 0.1);
+            box-shadow: 0 0 20px rgba(255, 95, 0, 0.2);
         }
 
-        /* 카드 내부 지지직거리는 가로줄(Scanline) */
-        .scanline {
+        .card::before {
+            content: "";
             position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(
-                rgba(18, 16, 16, 0) 50%, 
-                rgba(255, 95, 0, 0.05) 50%
-            );
-            background-size: 100% 4px;
-            z-index: 1;
-            pointer-events: none;
-            opacity: 0.3;
+            top: 0; left: 0; width: 100%; height: 2px;
+            background: var(--neon);
+            animation: scan 3s infinite linear;
         }
 
-        .snap-container { height: 100vh; overflow-y: auto; scroll-snap-type: y mandatory; }
-        section { scroll-snap-align: start; min-height: 100vh; }
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
 
+        .snap-section {
+            height: 100vh;
+            scroll-snap-align: start;
+        }
+
+        .scroll-container {
+            height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+        }
     </style>
 </head>
 <body>
 
-<div class="snap-container">
-    <section class="hero" id="hero-section">
-        <div class="hero-bg" id="hero-bg"></div>
-        <div class="spotlight" id="mouse-spotlight"></div>
-        
-        <div class="main-frame">
-            <p class="text-[10px] tracking-[2em] text-orange-500/40 mb-6 font-bold uppercase">Critical Security Alert</p>
-            <h1 class="neon-title glitch-hover">위기의<br>디자이너들</h1>
-            <div class="flex items-center justify-center gap-4 mt-10">
-                <span class="h-[1px] w-12 bg-orange-900"></span>
-                <p class="text-orange-600 tracking-[0.8em] text-[11px] font-black uppercase">Archive.2026</p>
-                <span class="h-[1px] w-12 bg-orange-900"></span>
-            </div>
+<div class="scroll-container">
+    <section class="snap-section" id="hero">
+        <div class="hero-bg" id="bg"></div>
+        <div class="spotlight" id="spot"></div>
+        <div class="content-box">
+            <p class="text-xs tracking-[1.5em] text-orange-500 mb-4 font-bold">WARNING: SYSTEM OVERRIDE</p>
+            <h1 class="title">위기의<br>디자이너들</h1>
+            <p class="mt-8 text-[10px] tracking-[0.5em] text-zinc-500 uppercase">Interactive Terminal v3.0</p>
         </div>
     </section>
 
-    <section class="bg-black py-32 px-6 flex items-center">
-        <div class="max-w-6xl mx-auto w-full">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-                <div class="card group">
-                    <div class="scanline"></div>
-                    <div class="relative z-10">
-                        <div class="flex justify-between items-end mb-8">
-                            <h3 class="text-4xl font-black text-zinc-200 group-hover:text-orange-500 transition-colors">AI DOMINANCE</h3>
-                            <div class="text-right">
-                                <span class="text-5xl font-black text-orange-600 counter" data-target="87">0</span><span class="text-orange-600 text-xl">%</span>
-                            </div>
-                        </div>
-                        <p class="text-zinc-500 leading-relaxed mb-10 text-sm">"생성형 AI의 발전으로 인간 디자이너의 가용 영역이 매분 매초 축소되고 있습니다. 시스템은 현재 인간을 배제한 창작 프로세스를 구축 중입니다."</p>
-                        <div class="pt-6 border-t border-zinc-900 flex justify-between items-center">
-                            <span class="text-[10px] text-zinc-700 font-bold uppercase tracking-widest">Protocol: Override</span>
-                            <button class="px-6 py-2 bg-transparent border border-zinc-800 text-[10px] font-bold hover:bg-orange-600 hover:border-orange-600 hover:text-black transition-all">VIEW DATA</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card group">
-                    <div class="scanline"></div>
-                    <div class="relative z-10">
-                        <div class="flex justify-between items-end mb-8">
-                            <h3 class="text-4xl font-black text-zinc-200 group-hover:text-orange-500 transition-colors">SORA ENGINE</h3>
-                            <div class="text-right">
-                                <span class="text-5xl font-black text-orange-600 counter" data-target="94">0</span><span class="text-orange-600 text-xl">%</span>
-                            </div>
-                        </div>
-                        <p class="text-zinc-500 leading-relaxed mb-10 text-sm">"비디오 생성 엔진 Sora의 완전 배포가 임박했습니다. 현실과 가상의 경계가 완전히 붕괴되었으며, 시각 데이터의 신뢰도는 0에 수렴합니다."</p>
-                        <div class="pt-6 border-t border-zinc-900 flex justify-between items-center">
-                            <span class="text-[10px] text-zinc-700 font-bold uppercase tracking-widest">Status: Terminal</span>
-                            <button class="px-6 py-2 bg-transparent border border-zinc-800 text-[10px] font-bold hover:bg-orange-600 hover:border-orange-600 hover:text-black transition-all">VIEW DATA</button>
-                        </div>
-                    </div>
-                </div>
+    <section class="snap-section bg-black overflow-y-auto py-20">
+        <div class="card-grid">
+            <div class="card">
+                <h3 class="text-orange-500 font-bold mb-4 uppercase tracking-tighter text-xl">Midjourney 6.1</h3>
+                <p class="text-zinc-500 text-sm mb-6">상업 디자인의 완전한 자동화가 시작되었습니다. 인간의 개입은 5% 미만으로 축소됩니다.</p>
+                <div class="text-4xl font-black text-white">85%</div>
+            </div>
+            <div class="card">
+                <h3 class="text-orange-500 font-bold mb-4 uppercase tracking-tighter text-xl">Sora Video</h3>
+                <p class="text-zinc-500 text-sm mb-6">비디오 데이터의 90%가 생성된 가짜입니다. 현실 세계의 픽셀은 의미를 잃었습니다.</p>
+                <div class="text-4xl font-black text-white">92%</div>
+            </div>
+            <div class="card">
+                <h3 class="text-orange-500 font-bold mb-4 uppercase tracking-tighter text-xl">UI/UX AI</h3>
+                <p class="text-zinc-500 text-sm mb-6">사용자 경험은 이제 알고리즘이 설계합니다. 디자인 패턴은 고착화되고 인간은 배제됩니다.</p>
+                <div class="text-4xl font-black text-white">78%</div>
+            </div>
+            <div class="card">
+                <h3 class="text-orange-500 font-bold mb-4 uppercase tracking-tighter text-xl">Deepfake Era</h3>
+                <p class="text-zinc-500 text-sm mb-6">초고해상도 위조 데이터가 소셜 네트워크를 점령했습니다. 신뢰라는 개념이 붕괴됩니다.</p>
+                <div class="text-4xl font-black text-white">99%</div>
             </div>
         </div>
     </section>
 </div>
 
 <script>
-    // 1. 히어로 인터랙션 (마우스 위치 감지)
-    const hero = document.getElementById('hero-section');
-    const heroBg = document.getElementById('hero-bg');
-    const spotlight = document.getElementById('mouse-spotlight');
+    const hero = document.getElementById('hero');
+    const bg = document.getElementById('bg');
+    const spot = document.getElementById('spot');
 
     hero.addEventListener('mousemove', (e) => {
         const x = (e.clientX / window.innerWidth) * 100;
         const y = (e.clientY / window.innerHeight) * 100;
 
-        // 스포트라이트 좌표 설정
-        spotlight.style.setProperty('--x', `${x}%`);
-        spotlight.style.setProperty('--y', `${y}%`);
+        // 스포트라이트 이동
+        spot.style.setProperty('--x', `${x}%`);
+        spot.style.setProperty('--y', `${y}%`);
 
-        // 배경 패럴랙스 (부드럽게 밀리는 효과)
-        const moveX = (e.clientX - window.innerWidth / 2) / 25;
-        const moveY = (e.clientY - window.innerHeight / 2) / 25;
-        heroBg.style.transform = `translate(${-moveX}px, ${-moveY}px) scale(1.05)`;
+        // 배경 패럴랙스 (마우스 반대 방향으로 살짝 이동)
+        const moveX = (e.clientX - window.innerWidth / 2) / 40;
+        const moveY = (e.clientY - window.innerHeight / 2) / 40;
+        bg.style.transform = `translate(${-moveX}px, ${-moveY}px) scale(1.1)`;
     });
-
-    // 2. 스크롤 시 숫자 카운트업
-    const countObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const counters = entry.target.querySelectorAll('.counter');
-                counters.forEach(c => {
-                    const target = +c.getAttribute('data-target');
-                    let current = 0;
-                    const timer = setInterval(() => {
-                        current += Math.ceil(target / 15);
-                        if (current >= target) {
-                            c.innerText = target;
-                            clearInterval(timer);
-                        } else {
-                            c.innerText = current;
-                        }
-                    }, 50);
-                });
-            }
-        });
-    }, { threshold: 0.5 });
-
-    document.querySelectorAll('section').forEach(s => countObserver.observe(s));
 </script>
 
 </body>
