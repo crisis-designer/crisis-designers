@@ -10,179 +10,138 @@
 
         :root { --neon: #ff5f00; }
 
-        body {
-            background-color: #000;
-            color: #fff;
-            margin: 0;
-            font-family: 'Noto Sans KR', sans-serif;
-            overflow-x: hidden;
+        body, html {
+            margin: 0; padding: 0; background: #000;
+            color: #fff; font-family: 'Noto Sans KR', sans-serif;
+            overflow-x: hidden; cursor: crosshair;
         }
 
-        /* --- 히어로 섹션 --- */
-        #hero {
-            position: relative;
-            height: 100vh;
-            width: 100%;
+        /* --- 전체 화면 지지직거리는 노이즈 --- */
+        .noise {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://grainy-gradients.vercel.app/noise.svg');
+            opacity: 0.15; pointer-events: none; z-index: 100;
+        }
+
+        /* --- 히어로 섹션: 배경 이미지 강제 삽입 --- */
+        .hero {
+            position: relative; height: 100vh; width: 100%;
+            display: flex; align-items: center; justify-content: center;
             overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         .hero-bg {
-            position: absolute;
-            top: -10%; left: -10%; width: 120%; height: 120%;
-            /* 검증된 고화질 배경 이미지 주소로 교체 */
-            background-image: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.9)), 
-                              url('https://images.unsplash.com/photo-1614850523296-d8c1af93d400?q=80&w=2070&auto=format&fit=crop');
-            background-size: cover;
-            background-position: center;
-            z-index: 1;
-            will-change: transform;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            /* [핵심] 사용자가 준 이미지를 배경으로 강제 지정 */
+            background-image: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.8)), 
+                              url('https://r.jina.ai/i/https://storage.googleapis.com/generate-images-prod/v1/images/86d64942-83b5-4b53-90d0-6060c5a17686/output.jpg');
+            background-size: cover; background-position: center;
+            z-index: 1; transform: scale(1.1); transition: transform 0.1s ease-out;
         }
 
+        /* 마우스 스포트라이트 (이미지 위를 비추는 효과) */
         .spotlight {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), transparent 0%, rgba(0,0,0,0.95) 35%);
-            z-index: 2;
-            pointer-events: none;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), transparent 10%, rgba(0,0,0,0.9) 40%);
+            z-index: 2; pointer-events: none;
         }
 
-        .content-box {
-            position: relative;
-            z-index: 10;
-            text-align: center;
-            padding: 2rem;
-            background: rgba(0,0,0,0.5);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 95, 0, 0.2);
+        .main-ui {
+            position: relative; z-index: 10; text-align: center;
+            padding: 4rem; background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(10px); border: 1px solid rgba(255, 95, 0, 0.2);
         }
 
-        .title {
+        .neon-title {
             font-family: 'Orbitron', sans-serif;
-            font-size: clamp(3rem, 10vw, 6rem);
-            line-height: 1;
-            color: var(--neon);
-            text-shadow: 0 0 20px var(--neon);
-            animation: glitch 1s infinite;
+            font-size: clamp(2.5rem, 10vw, 7rem);
+            color: var(--neon); text-shadow: 0 0 30px var(--neon);
+            font-weight: 900; line-height: 0.9;
         }
 
-        @keyframes glitch {
-            0% { transform: translate(0); }
-            20% { transform: translate(-2px, 2px); }
-            40% { transform: translate(-2px, -2px); text-shadow: 2px 0 red, -2px 0 blue; }
-            60% { transform: translate(2px, 2px); }
-            100% { transform: translate(0); }
+        /* --- 카드 섹션 (디자인 고도화) --- */
+        .card-container {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem; padding: 5rem 2rem; max-width: 1300px; margin: 0 auto;
         }
 
-        /* --- 카드 디자인 --- */
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            padding: 4rem 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
+        .cyber-card {
+            background: rgba(10, 10, 10, 0.8); border: 1px solid #222;
+            padding: 2.5rem; position: relative; overflow: hidden;
+            transition: 0.4s;
         }
 
-        .card {
-            background: #0a0a0a;
-            border: 1px solid #222;
-            padding: 2rem;
-            position: relative;
-            transition: 0.3s;
-            overflow: hidden;
+        .cyber-card:hover {
+            border-color: var(--neon); transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(255, 95, 0, 0.2);
         }
 
-        .card:hover {
-            border-color: var(--neon);
-            box-shadow: 0 0 20px rgba(255, 95, 0, 0.2);
+        .cyber-card::before {
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+            background: var(--neon); animation: scan 2s infinite linear;
         }
 
-        .card::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 2px;
-            background: var(--neon);
-            animation: scan 3s infinite linear;
-        }
+        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
 
-        @keyframes scan {
-            0% { top: 0; }
-            100% { top: 100%; }
-        }
-
-        .snap-section {
-            height: 100vh;
-            scroll-snap-align: start;
-        }
-
-        .scroll-container {
-            height: 100vh;
-            overflow-y: scroll;
-            scroll-snap-type: y mandatory;
-        }
+        .stat { font-family: 'Orbitron'; font-size: 3rem; color: var(--neon); font-weight: 900; }
     </style>
 </head>
 <body>
 
-<div class="scroll-container">
-    <section class="snap-section" id="hero">
-        <div class="hero-bg" id="bg"></div>
-        <div class="spotlight" id="spot"></div>
-        <div class="content-box">
-            <p class="text-xs tracking-[1.5em] text-orange-500 mb-4 font-bold">WARNING: SYSTEM OVERRIDE</p>
-            <h1 class="title">위기의<br>디자이너들</h1>
-            <p class="mt-8 text-[10px] tracking-[0.5em] text-zinc-500 uppercase">Interactive Terminal v3.0</p>
+    <div class="noise"></div>
+
+    <section class="hero" id="hero-area">
+        <div class="hero-bg" id="hero-bg"></div>
+        <div class="spotlight" id="spotlight"></div>
+        
+        <div class="main-ui">
+            <p class="text-[10px] tracking-[2em] text-orange-500 mb-6 font-bold opacity-70">DATA ARCHIVE: 2026</p>
+            <h1 class="neon-title">위기의<br>디자이너들</h1>
+            <div class="mt-12 h-[1px] w-24 bg-orange-600 mx-auto"></div>
         </div>
     </section>
 
-    <section class="snap-section bg-black overflow-y-auto py-20">
-        <div class="card-grid">
-            <div class="card">
-                <h3 class="text-orange-500 font-bold mb-4 uppercase tracking-tighter text-xl">Midjourney 6.1</h3>
-                <p class="text-zinc-500 text-sm mb-6">상업 디자인의 완전한 자동화가 시작되었습니다. 인간의 개입은 5% 미만으로 축소됩니다.</p>
-                <div class="text-4xl font-black text-white">85%</div>
+    <div class="bg-black">
+        <div class="card-container">
+            <div class="cyber-card">
+                <h3 class="text-orange-500 font-bold text-xl mb-4">AI DOMINANCE</h3>
+                <p class="text-zinc-500 text-sm mb-6">창의성의 영역이 알고리즘으로 대체되고 있습니다.</p>
+                <div class="stat">85%</div>
             </div>
-            <div class="card">
-                <h3 class="text-orange-500 font-bold mb-4 uppercase tracking-tighter text-xl">Sora Video</h3>
-                <p class="text-zinc-500 text-sm mb-6">비디오 데이터의 90%가 생성된 가짜입니다. 현실 세계의 픽셀은 의미를 잃었습니다.</p>
-                <div class="text-4xl font-black text-white">92%</div>
+            <div class="cyber-card">
+                <h3 class="text-orange-500 font-bold text-xl mb-4">REALISM COLLAPSE</h3>
+                <p class="text-zinc-500 text-sm mb-6">가상과 현실의 경계가 완전히 붕괴되었습니다.</p>
+                <div class="stat">92%</div>
             </div>
-            <div class="card">
-                <h3 class="text-orange-500 font-bold mb-4 uppercase tracking-tighter text-xl">UI/UX AI</h3>
-                <p class="text-zinc-500 text-sm mb-6">사용자 경험은 이제 알고리즘이 설계합니다. 디자인 패턴은 고착화되고 인간은 배제됩니다.</p>
-                <div class="text-4xl font-black text-white">78%</div>
+            <div class="cyber-card">
+                <h3 class="text-orange-500 font-bold text-xl mb-4">UI AUTOMATION</h3>
+                <p class="text-zinc-500 text-sm mb-6">사용자 경험은 이제 시스템이 설계합니다.</p>
+                <div class="stat">78%</div>
             </div>
-            <div class="card">
-                <h3 class="text-orange-500 font-bold mb-4 uppercase tracking-tighter text-xl">Deepfake Era</h3>
-                <p class="text-zinc-500 text-sm mb-6">초고해상도 위조 데이터가 소셜 네트워크를 점령했습니다. 신뢰라는 개념이 붕괴됩니다.</p>
-                <div class="text-4xl font-black text-white">99%</div>
+            <div class="cyber-card">
+                <h3 class="text-orange-500 font-bold text-xl mb-4">HUMAN ERROR</h3>
+                <p class="text-zinc-500 text-sm mb-6">더 이상 인간의 감각이 필요하지 않은 시대입니다.</p>
+                <div class="stat">99%</div>
             </div>
         </div>
-    </section>
-</div>
+    </div>
 
-<script>
-    const hero = document.getElementById('hero');
-    const bg = document.getElementById('bg');
-    const spot = document.getElementById('spot');
+    <script>
+        const bg = document.getElementById('hero-bg');
+        const spot = document.getElementById('spotlight');
+        const hero = document.getElementById('hero-area');
 
-    hero.addEventListener('mousemove', (e) => {
-        const x = (e.clientX / window.innerWidth) * 100;
-        const y = (e.clientY / window.innerHeight) * 100;
+        hero.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth) * 100;
+            const y = (e.clientY / window.innerHeight) * 100;
 
-        // 스포트라이트 이동
-        spot.style.setProperty('--x', `${x}%`);
-        spot.style.setProperty('--y', `${y}%`);
+            spot.style.setProperty('--x', `${x}%`);
+            spot.style.setProperty('--y', `${y}%`);
 
-        // 배경 패럴랙스 (마우스 반대 방향으로 살짝 이동)
-        const moveX = (e.clientX - window.innerWidth / 2) / 40;
-        const moveY = (e.clientY - window.innerHeight / 2) / 40;
-        bg.style.transform = `translate(${-moveX}px, ${-moveY}px) scale(1.1)`;
-    });
-</script>
-
+            const moveX = (e.clientX - window.innerWidth / 2) / 30;
+            const moveY = (e.clientY - window.innerHeight / 2) / 30;
+            bg.style.transform = `scale(1.1) translate(${-moveX}px, ${-moveY}px)`;
+        });
+    </script>
 </body>
 </html>
