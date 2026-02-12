@@ -3,145 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRISIS DESIGNERS | 위기의 디자이너들</title>
+    <title>위기의 디자이너들</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Noto+Sans+KR:wght@100;900&display=swap');
 
-        :root { --neon: #ff5f00; }
+        /* 1. 기본 커서 제거 및 네온 스타일 */
+        * { cursor: none !important; }
+        body { background: #000; color: #fff; font-family: 'Noto Sans KR', sans-serif; overflow-x: hidden; }
 
-        body, html {
-            margin: 0; padding: 0; background: #000;
-            color: #fff; font-family: 'Noto Sans KR', sans-serif;
-            overflow-x: hidden; cursor: crosshair;
+        /* 2. 커스텀 커서 (포인터 문제 해결) */
+        #cursor {
+            position: fixed; width: 25px; height: 25px; border: 2px solid #ff5f00;
+            border-radius: 50%; pointer-events: none; transform: translate(-50%, -50%);
+            z-index: 9999; box-shadow: 0 0 15px #ff5f00; transition: transform 0.05s linear;
         }
 
-        /* --- 전체 화면 지지직거리는 노이즈 --- */
-        .noise {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: url('https://grainy-gradients.vercel.app/noise.svg');
-            opacity: 0.15; pointer-events: none; z-index: 100;
-        }
-
-        /* --- 히어로 섹션: 배경 이미지 강제 삽입 --- */
-        .hero {
-            position: relative; height: 100vh; width: 100%;
-            display: flex; align-items: center; justify-content: center;
-            overflow: hidden;
-        }
-
+        /* 3. 히어로 섹션 - 배경 패럴랙스 */
+        .hero { position: relative; height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center; }
         .hero-bg {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            /* [핵심] 사용자가 준 이미지를 배경으로 강제 지정 */
-            background-image: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.8)), 
-                              url('https://r.jina.ai/i/https://storage.googleapis.com/generate-images-prod/v1/images/86d64942-83b5-4b53-90d0-6060c5a17686/output.jpg');
-            background-size: cover; background-position: center;
-            z-index: 1; transform: scale(1.1); transition: transform 0.1s ease-out;
+            position: absolute; width: 110%; height: 110%;
+            background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.8)), url('bg.jpg') center/cover no-repeat;
+            z-index: 1; transition: 0.1s ease-out;
         }
 
-        /* 마우스 스포트라이트 (이미지 위를 비추는 효과) */
-        .spotlight {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), transparent 10%, rgba(0,0,0,0.9) 40%);
-            z-index: 2; pointer-events: none;
+        /* 4. 글리치 애니메이션 타이틀 */
+        .glitch-title {
+            font-family: 'Orbitron', sans-serif; font-size: clamp(3rem, 10vw, 7rem);
+            color: #ff5f00; text-shadow: 0 0 20px #ff5f00; line-height: 1; z-index: 10;
+            animation: glitch 3s infinite;
+        }
+        @keyframes glitch {
+            0%, 90%, 100% { transform: translate(0); }
+            92% { transform: translate(-5px, 2px); text-shadow: 2px 0 red; }
+            94% { transform: translate(5px, -2px); text-shadow: -2px 0 blue; }
+            96% { transform: translate(-2px, 5px); }
         }
 
-        .main-ui {
-            position: relative; z-index: 10; text-align: center;
-            padding: 4rem; background: rgba(0,0,0,0.4);
-            backdrop-filter: blur(10px); border: 1px solid rgba(255, 95, 0, 0.2);
+        /* 5. 카드 디자인 (업데이트 정보 중심) */
+        .card {
+            background: rgba(15, 15, 15, 0.95); border: 1px solid #222; padding: 2.5rem;
+            position: relative; overflow: hidden; transition: 0.4s;
+        }
+        .card:hover { border-color: #ff5f00; box-shadow: 0 0 30px rgba(255, 95, 0, 0.2); }
+        .card::after {
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,95,0,0.03) 3px);
+            pointer-events: none;
         }
 
-        .neon-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: clamp(2.5rem, 10vw, 7rem);
-            color: var(--neon); text-shadow: 0 0 30px var(--neon);
-            font-weight: 900; line-height: 0.9;
-        }
-
-        /* --- 카드 섹션 (디자인 고도화) --- */
-        .card-container {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem; padding: 5rem 2rem; max-width: 1300px; margin: 0 auto;
-        }
-
-        .cyber-card {
-            background: rgba(10, 10, 10, 0.8); border: 1px solid #222;
-            padding: 2.5rem; position: relative; overflow: hidden;
-            transition: 0.4s;
-        }
-
-        .cyber-card:hover {
-            border-color: var(--neon); transform: translateY(-10px);
-            box-shadow: 0 10px 30px rgba(255, 95, 0, 0.2);
-        }
-
-        .cyber-card::before {
-            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
-            background: var(--neon); animation: scan 2s infinite linear;
-        }
-
-        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
-
-        .stat { font-family: 'Orbitron'; font-size: 3rem; color: var(--neon); font-weight: 900; }
+        .stat { font-family: 'Orbitron'; font-size: 3.5rem; color: #ff5f00; font-weight: 900; line-height: 1; }
     </style>
 </head>
 <body>
 
-    <div class="noise"></div>
+<div id="cursor"></div>
 
-    <section class="hero" id="hero-area">
-        <div class="hero-bg" id="hero-bg"></div>
-        <div class="spotlight" id="spotlight"></div>
-        
-        <div class="main-ui">
-            <p class="text-[10px] tracking-[2em] text-orange-500 mb-6 font-bold opacity-70">DATA ARCHIVE: 2026</p>
-            <h1 class="neon-title">위기의<br>디자이너들</h1>
-            <div class="mt-12 h-[1px] w-24 bg-orange-600 mx-auto"></div>
+<div class="h-screen overflow-y-auto" style="scroll-snap-type: y mandatory;">
+    <section class="hero" style="scroll-snap-align: start;">
+        <div class="hero-bg" id="bg"></div>
+        <div class="relative z-10 text-center">
+            <p class="text-[10px] tracking-[2em] text-orange-500/50 mb-6 font-bold uppercase">Status: 2026 Archive Updated</p>
+            <h1 class="glitch-title">위기의<br>디자이너들</h1>
+            <div class="mt-12 h-[1px] w-20 bg-orange-600/50 mx-auto"></div>
         </div>
     </section>
 
-    <div class="bg-black">
-        <div class="card-container">
-            <div class="cyber-card">
-                <h3 class="text-orange-500 font-bold text-xl mb-4">AI DOMINANCE</h3>
-                <p class="text-zinc-500 text-sm mb-6">창의성의 영역이 알고리즘으로 대체되고 있습니다.</p>
-                <div class="stat">85%</div>
+    <section class="bg-black py-32 px-6" style="scroll-snap-align: start;">
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10">
+            <div class="card">
+                <p class="text-[10px] text-orange-600 font-bold mb-4 tracking-widest uppercase">Update 2026.02.10</p>
+                <h3 class="text-3xl font-black mb-6">Midjourney v6.1</h3>
+                <p class="text-zinc-500 text-sm leading-relaxed mb-8">상업 디자인의 경계가 무너졌습니다. 인간 디자이너의 보정 작업마저 AI가 완전히 점령했습니다.</p>
+                <div class="flex justify-between items-end border-t border-zinc-900 pt-6">
+                    <span class="text-[10px] text-zinc-700 font-bold">THREAT LEVEL</span>
+                    <span class="stat">85%</span>
+                </div>
             </div>
-            <div class="cyber-card">
-                <h3 class="text-orange-500 font-bold text-xl mb-4">REALISM COLLAPSE</h3>
-                <p class="text-zinc-500 text-sm mb-6">가상과 현실의 경계가 완전히 붕괴되었습니다.</p>
-                <div class="stat">92%</div>
+
+            <div class="card">
+                <p class="text-[10px] text-orange-600 font-bold mb-4 tracking-widest uppercase">Update 2026.02.11</p>
+                <h3 class="text-3xl font-black mb-6">Sora Video</h3>
+                <p class="text-zinc-500 text-sm leading-relaxed mb-8">현실과 시뮬레이션의 경계가 사라졌습니다. 더 이상 눈에 보이는 것을 믿을 수 없는 시대입니다.</p>
+                <div class="flex justify-between items-end border-t border-zinc-900 pt-6">
+                    <span class="text-[10px] text-zinc-700 font-bold">REALISM COLLAPSE</span>
+                    <span class="stat">92%</span>
+                </div>
             </div>
-            <div class="cyber-card">
-                <h3 class="text-orange-500 font-bold text-xl mb-4">UI AUTOMATION</h3>
-                <p class="text-zinc-500 text-sm mb-6">사용자 경험은 이제 시스템이 설계합니다.</p>
-                <div class="stat">78%</div>
+
+            <div class="card">
+                <p class="text-[10px] text-orange-600 font-bold mb-4 tracking-widest uppercase">Data Insight</p>
+                <h3 class="text-3xl font-black mb-6">UI/UX AI</h3>
+                <p class="text-zinc-500 text-sm leading-relaxed mb-8">사용자 경험은 이제 알고리즘이 설계합니다. 디자인 패턴은 고착화되고 인간의 직관은 배제됩니다.</p>
+                <div class="flex justify-between items-end border-t border-zinc-900 pt-6">
+                    <span class="text-[10px] text-zinc-700 font-bold">SYSTEM DOMINANCE</span>
+                    <span class="stat">78%</span>
+                </div>
             </div>
-            <div class="cyber-card">
-                <h3 class="text-orange-500 font-bold text-xl mb-4">HUMAN ERROR</h3>
-                <p class="text-zinc-500 text-sm mb-6">더 이상 인간의 감각이 필요하지 않은 시대입니다.</p>
-                <div class="stat">99%</div>
+
+            <div class="card">
+                <p class="text-[10px] text-orange-600 font-bold mb-4 tracking-widest uppercase">Warning</p>
+                <h3 class="text-3xl font-black mb-6">Deepfake Era</h3>
+                <p class="text-zinc-500 text-sm leading-relaxed mb-8">초고해상도 위조 데이터가 소셜 네트워크를 점령했습니다. 인간의 독창성은 박제되었습니다.</p>
+                <div class="flex justify-between items-end border-t border-zinc-900 pt-6">
+                    <span class="text-[10px] text-zinc-700 font-bold">TRUST RATIO</span>
+                    <span class="stat">99%</span>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
+</div>
 
-    <script>
-        const bg = document.getElementById('hero-bg');
-        const spot = document.getElementById('spotlight');
-        const hero = document.getElementById('hero-area');
+<script>
+    const bg = document.getElementById('bg');
+    const cursor = document.getElementById('cursor');
 
-        hero.addEventListener('mousemove', (e) => {
-            const x = (e.clientX / window.innerWidth) * 100;
-            const y = (e.clientY / window.innerHeight) * 100;
+    window.addEventListener('mousemove', (e) => {
+        // 1. 커스텀 커서 이동 (+ 대신 네온 링)
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
 
-            spot.style.setProperty('--x', `${x}%`);
-            spot.style.setProperty('--y', `${y}%`);
+        // 2. 배경 패럴랙스
+        const x = (e.clientX - window.innerWidth / 2) / 35;
+        const y = (e.clientY - window.innerHeight / 2) / 35;
+        bg.style.transform = `translate(${-x}px, ${-y}px) scale(1.1)`;
+    });
+</script>
 
-            const moveX = (e.clientX - window.innerWidth / 2) / 30;
-            const moveY = (e.clientY - window.innerHeight / 2) / 30;
-            bg.style.transform = `scale(1.1) translate(${-moveX}px, ${-moveY}px)`;
-        });
-    </script>
 </body>
 </html>
