@@ -31,7 +31,7 @@
             z-index: 2; pointer-events: none;
         }
 
-        /* 타이틀 글리치 애니메이션 */
+        /* 타이틀 글리치 */
         .glitch-title {
             font-family: 'Orbitron', sans-serif; font-size: clamp(3rem, 12vw, 7.5rem);
             color: var(--neon); text-shadow: 0 0 30px var(--neon); line-height: 0.9; z-index: 10;
@@ -39,12 +39,14 @@
         }
         @keyframes main-glitch { 0%, 95%, 100% { transform: skew(0); } 96% { transform: skew(10deg); text-shadow: 3px 0 red; } 97% { transform: skew(-10deg); text-shadow: -3px 0 blue; } }
 
-        /* 카드 및 버튼 스타일 */
+        /* 카드 스타일 */
         .card { background: rgba(10, 10, 10, 0.9); border: 1px solid #222; padding: 2.5rem; transition: 0.4s; }
         .card:hover { border-color: var(--neon); transform: translateY(-10px); }
-        .stat-value { font-family: 'Orbitron'; font-size: 3.5rem; font-weight: 900; color: var(--neon); }
-        .vote-btn { border: 1px solid var(--neon); background: rgba(255, 95, 0, 0.05); padding: 1rem 2rem; transition: 0.3s; font-family: 'Orbitron'; font-size: 0.8rem; }
+        
+        /* 투표 UI */
+        .vote-btn { border: 1px solid var(--neon); background: rgba(255, 95, 0, 0.05); padding: 0.8rem 1.5rem; transition: 0.3s; font-family: 'Orbitron'; font-size: 0.75rem; color: var(--neon); font-weight: 900; }
         .vote-btn:hover { background: var(--neon); color: #000; box-shadow: 0 0 20px var(--neon); }
+        .vote-count { font-family: 'Orbitron'; color: var(--neon); font-size: 1.5rem; font-weight: 900; }
 
         .scroll-container { height: 100vh; overflow-y: auto; scroll-snap-type: y mandatory; }
         .snap-section { scroll-snap-align: start; min-height: 100vh; position: relative; }
@@ -55,7 +57,7 @@
 <div id="cursor"></div>
 
 <div class="scroll-container">
-    <section class="hero snap-section" id="hero-area">
+    <section class="hero snap-section">
         <div class="hero-bg" id="hero-bg"></div>
         <div class="spotlight" id="spotlight"></div>
         <div class="relative z-10 text-center px-4">
@@ -64,56 +66,73 @@
         </div>
     </section>
 
-    <section class="snap-section flex flex-col items-center justify-center bg-zinc-950 px-6">
-        <div class="max-w-3xl text-center">
-            <h2 class="font-black text-5xl mb-12 tracking-tighter">당신의 위기 지수는?</h2>
-            <div class="flex flex-wrap justify-center gap-4">
-                <button class="vote-btn">LOW (10%)</button>
-                <button class="vote-btn">STABLE (40%)</button>
-                <button class="vote-btn">WARNING (70%)</button>
-                <button class="vote-btn">CRITICAL (99%)</button>
-            </div>
-        </div>
-    </section>
-
     <section class="snap-section bg-black py-20 px-6 overflow-y-auto">
         <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div class="card">
-                <p class="text-orange-500 font-bold text-xs tracking-widest mb-4">MIDJOURNEY V6.1</p>
-                <ul class="text-zinc-400 text-sm space-y-2 mb-8 list-disc pl-4">
+            
+            <div class="card" id="card-1">
+                <p class="text-orange-500 font-bold text-xs tracking-widest mb-4 uppercase">Update Archive: Midjourney v6.1</p>
+                <ul class="text-zinc-400 text-sm space-y-2 mb-10 list-disc pl-4">
                     <li>더 정밀해진 텍스트 렌더링 및 레이아웃 유지력 강화</li>
                     <li>--sref를 통한 일관된 스타일 참조 기능 고도화</li>
                     <li>피부 질감 등 극사실적 표현력 추가</li>
                 </ul>
-                <div class="stat-value">85%</div>
+                <div class="flex justify-between items-center border-t border-zinc-900 pt-6">
+                    <div class="text-left">
+                        <p class="text-[10px] text-zinc-600 font-bold uppercase mb-1">Crisis Voters</p>
+                        <span class="vote-count" id="count-1">1,240</span>
+                    </div>
+                    <button class="vote-btn" onclick="vote(1)">CRISIS VOTE</button>
+                </div>
             </div>
-            <div class="card">
-                <p class="text-orange-500 font-bold text-xs tracking-widest mb-4">OPENAI SORA</p>
-                <ul class="text-zinc-400 text-sm space-y-2 mb-8 list-disc pl-4">
+
+            <div class="card" id="card-2">
+                <p class="text-orange-500 font-bold text-xs tracking-widest mb-4 uppercase">Update Archive: OpenAI Sora</p>
+                <ul class="text-zinc-400 text-sm space-y-2 mb-10 list-disc pl-4">
                     <li>최대 60초 고화질 동영상 생성 기능</li>
                     <li>복잡한 물리 법칙 시뮬레이션 구현</li>
                     <li>다각도 카메라 워킹 및 캐릭터 일관성 유지</li>
                 </ul>
-                <div class="stat-value">92%</div>
+                <div class="flex justify-between items-center border-t border-zinc-900 pt-6">
+                    <div class="text-left">
+                        <p class="text-[10px] text-zinc-600 font-bold uppercase mb-1">Crisis Voters</p>
+                        <span class="vote-count" id="count-2">3,892</span>
+                    </div>
+                    <button class="vote-btn" onclick="vote(2)">CRISIS VOTE</button>
+                </div>
             </div>
-            <div class="card">
-                <p class="text-orange-500 font-bold text-xs tracking-widest mb-4">UI/UX AI (FIGMA AI/V0.DEV)</p>
-                <ul class="text-zinc-400 text-sm space-y-2 mb-8 list-disc pl-4">
+
+            <div class="card" id="card-3">
+                <p class="text-orange-500 font-bold text-xs tracking-widest mb-4 uppercase">Update Archive: UI/UX AI (Figma/v0)</p>
+                <ul class="text-zinc-400 text-sm space-y-2 mb-10 list-disc pl-4">
                     <li>텍스트 기반 반응형 컴포넌트 자동 생성</li>
                     <li>디자인 시스템 학습 맞춤형 프로토타입 구현</li>
                     <li>코드 기반 인터페이스 즉시 익스포트</li>
                 </ul>
-                <div class="stat-value">78%</div>
+                <div class="flex justify-between items-center border-t border-zinc-900 pt-6">
+                    <div class="text-left">
+                        <p class="text-[10px] text-zinc-600 font-bold uppercase mb-1">Crisis Voters</p>
+                        <span class="vote-count" id="count-3">954</span>
+                    </div>
+                    <button class="vote-btn" onclick="vote(3)">CRISIS VOTE</button>
+                </div>
             </div>
-            <div class="card">
-                <p class="text-orange-500 font-bold text-xs tracking-widest mb-4">GENERATIVE MEDIA</p>
-                <ul class="text-zinc-400 text-sm space-y-2 mb-8 list-disc pl-4">
+
+            <div class="card" id="card-4">
+                <p class="text-orange-500 font-bold text-xs tracking-widest mb-4 uppercase">Update Archive: Deepfake & Media</p>
+                <ul class="text-zinc-400 text-sm space-y-2 mb-10 list-disc pl-4">
                     <li>실시간 음성 변조 및 페이스 스와프 정밀도 향상</li>
                     <li>저해상도 소스의 8K급 AI 업스케일링</li>
                     <li>가짜 뉴스 및 이미지의 자동 확산 기술</li>
                 </ul>
-                <div class="stat-value">99%</div>
+                <div class="flex justify-between items-center border-t border-zinc-900 pt-6">
+                    <div class="text-left">
+                        <p class="text-[10px] text-zinc-600 font-bold uppercase mb-1">Crisis Voters</p>
+                        <span class="vote-count" id="count-4">5,201</span>
+                    </div>
+                    <button class="vote-btn" onclick="vote(4)">CRISIS VOTE</button>
+                </div>
             </div>
+
         </div>
     </section>
 </div>
@@ -123,6 +142,7 @@
     const spot = document.getElementById('spotlight');
     const cursor = document.getElementById('cursor');
 
+    // 1. 커서 & 배경 인터랙션
     window.addEventListener('mousemove', (e) => {
         cursor.style.left = e.clientX + 'px';
         cursor.style.top = e.clientY + 'px';
@@ -134,6 +154,23 @@
         const moveY = (e.clientY - window.innerHeight/2) / 35;
         bg.style.transform = `translate(${-moveX}px, ${-moveY}px) scale(1.1)`;
     });
+
+    // 2. 투표 로직 (로컬 카운트업 연출)
+    function vote(id) {
+        const countElement = document.getElementById(`count-${id}`);
+        let currentCount = parseInt(countElement.innerText.replace(/,/g, ''));
+        
+        // 클릭 시 인원수 증가 (임시 연출)
+        currentCount++;
+        countElement.innerText = currentCount.toLocaleString();
+        
+        // 버튼 피드백
+        const btn = event.target;
+        btn.innerText = "VOTED";
+        btn.style.borderColor = "#fff";
+        btn.style.color = "#fff";
+        btn.disabled = true;
+    }
 </script>
 </body>
 </html>
