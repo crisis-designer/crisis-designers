@@ -3,90 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>위기의 디자이너들</title>
+    <title>CRISIS DESIGNERS | 위기의 디자이너들</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Noto+Sans+KR:wght@100;400;900&display=swap');
+        :root { --neon: #ff5f00; }
         * { cursor: none !important; }
-        body { background: #000; color: #fff; font-family: 'Noto Sans KR', sans-serif; overflow-x: hidden; }
+        body, html { margin: 0; padding: 0; background: #000; color: #fff; font-family: 'Noto Sans KR', sans-serif; overflow-x: hidden; }
+
+        /* 커스텀 네온 커서 */
         #cursor {
-            position: fixed; width: 25px; height: 25px; border: 2px solid #ff5f00;
+            position: fixed; width: 30px; height: 30px; border: 2px solid var(--neon);
             border-radius: 50%; pointer-events: none; transform: translate(-50%, -50%);
-            z-index: 9999; box-shadow: 0 0 15px #ff5f00;
+            z-index: 9999; box-shadow: 0 0 15px var(--neon); transition: transform 0.1s ease-out;
         }
+
+        /* 히어로 섹션 */
         .hero { position: relative; height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center; }
         .hero-bg {
-            position: absolute; width: 110%; height: 110%;
-            /* 스크린샷에 찍힌 파일 이름 그대로 적용 */
-            background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.8)), url('bg.jpg.png') center/cover no-repeat;
+            position: absolute; width: 115%; height: 115%;
+            background: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.85)), url('bg.jpg') center/cover no-repeat;
             z-index: 1; will-change: transform;
         }
+        .spotlight {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), transparent 10%, rgba(0,0,0,0.92) 45%);
+            z-index: 2; pointer-events: none;
+        }
+
+        /* 타이틀 글리치 애니메이션 */
         .glitch-title {
-            font-family: 'Orbitron', sans-serif; font-size: clamp(3rem, 10vw, 7rem);
-            color: #ff5f00; text-shadow: 0 0 20px #ff5f00; z-index: 10; animation: glitch 3s infinite;
+            font-family: 'Orbitron', sans-serif; font-size: clamp(3rem, 12vw, 7.5rem);
+            color: var(--neon); text-shadow: 0 0 30px var(--neon); line-height: 0.9; z-index: 10;
+            animation: main-glitch 4s infinite;
         }
-        @keyframes glitch { 
-            0%, 90% { transform: translate(0); } 
-            95% { transform: translate(-5px, 2px); text-shadow: 2px 0 red; }
-            100% { transform: translate(5px, -2px); text-shadow: -2px 0 blue; }
-        }
-        .card { background: rgba(15, 15, 15, 0.9); border: 1px solid #333; padding: 2rem; transition: 0.3s; }
-        .card:hover { border-color: #ff5f00; transform: translateY(-5px); }
-        .stat { font-family: 'Orbitron'; font-size: 3rem; color: #ff5f00; font-weight: 900; }
+        @keyframes main-glitch { 0%, 95%, 100% { transform: skew(0); } 96% { transform: skew(10deg); text-shadow: 3px 0 red; } 97% { transform: skew(-10deg); text-shadow: -3px 0 blue; } }
+
+        /* 카드 및 버튼 스타일 */
+        .card { background: rgba(10, 10, 10, 0.9); border: 1px solid #222; padding: 2.5rem; transition: 0.4s; }
+        .card:hover { border-color: var(--neon); transform: translateY(-10px); }
+        .stat-value { font-family: 'Orbitron'; font-size: 3.5rem; font-weight: 900; color: var(--neon); }
+        .vote-btn { border: 1px solid var(--neon); background: rgba(255, 95, 0, 0.05); padding: 1rem 2rem; transition: 0.3s; font-family: 'Orbitron'; font-size: 0.8rem; }
+        .vote-btn:hover { background: var(--neon); color: #000; box-shadow: 0 0 20px var(--neon); }
+
+        .scroll-container { height: 100vh; overflow-y: auto; scroll-snap-type: y mandatory; }
+        .snap-section { scroll-snap-align: start; min-height: 100vh; position: relative; }
     </style>
 </head>
 <body>
-    <div id="cursor"></div>
-    <div class="h-screen overflow-y-auto" style="scroll-snap-type: y mandatory;">
-        <section class="hero" style="scroll-snap-align: start;">
-            <div class="hero-bg" id="bg"></div>
-            <div class="relative z-10 text-center">
-                <h1 class="glitch-title">위기의<br>디자이너들</h1>
-            </div>
-        </section>
-        
-        <section class="h-screen flex flex-col items-center justify-center bg-zinc-950" style="scroll-snap-align: start;">
-            <h2 class="text-4xl font-black mb-10">당신의 위기 지수는?</h2>
-            <div class="flex gap-4">
-                <button class="border border-orange-600 px-6 py-2 hover:bg-orange-600">LOW</button>
-                <button class="border border-orange-600 px-6 py-2 hover:bg-orange-600">CRITICAL</button>
-            </div>
-        </section>
 
-        <section class="py-20 px-6 bg-black" style="scroll-snap-align: start;">
-            <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="card">
-                    <p class="text-orange-500 font-bold mb-2">MIDJOURNEY V6.1</p>
-                    <ul class="text-zinc-500 text-sm list-disc pl-4 mb-6">
-                        <li>더 정밀해진 텍스트 렌더링 및 레이아웃 유지력 강화</li>
-                        <li>--sref를 통한 일관된 스타일 참조 기능 고도화</li>
-                        <li>피부 질감 등 극사실적 표현력 추가</li>
-                    </ul>
-                    <div class="stat">85%</div>
-                </div>
-                <div class="card">
-                    <p class="text-orange-500 font-bold mb-2">OPENAI SORA</p>
-                    <ul class="text-zinc-500 text-sm list-disc pl-4 mb-6">
-                        <li>최대 60초 고화질 동영상 생성 기능</li>
-                        <li>복잡한 물리 법칙 시뮬레이션 구현</li>
-                        <li>다각도 카메라 워킹 유지 기술</li>
-                    </ul>
-                    <div class="stat">92%</div>
-                </div>
-            </div>
-        </section>
-    </div>
+<div id="cursor"></div>
 
-    <script>
-        const bg = document.getElementById('bg');
-        const cursor = document.getElementById('cursor');
-        window.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-            const x = (e.clientX - window.innerWidth/2) / 30;
-            const y = (e.clientY - window.innerHeight/2) / 30;
-            bg.style.transform = `translate(${-x}px, ${-y}px) scale(1.1)`;
-        });
-    </script>
+<div class="scroll-container">
+    <section class="hero snap-section" id="hero-area">
+        <div class="hero-bg" id="hero-bg"></div>
+        <div class="spotlight" id="spotlight"></div>
+        <div class="relative z-10 text-center px-4">
+            <p class="text-[10px] tracking-[2em] text-orange-500/60 mb-8 font-bold uppercase">System Override In Progress</p>
+            <h1 class="glitch-title">위기의<br>디자이너들</h1>
+        </div>
+    </section>
+
+    <section class="snap-section flex flex-col items-center justify-center bg-zinc-950 px-6">
+        <div class="max-w-3xl text-center">
+            <h2 class="font-black text-5xl mb-12 tracking-tighter">당신의 위기 지수는?</h2>
+            <div class="flex flex-wrap justify-center gap-4">
+                <button class="vote-btn">LOW (10%)</button>
+                <button class="vote-btn">STABLE (40%)</button>
+                <button class="vote-btn">WARNING (70%)</button>
+                <button class="vote-btn">CRITICAL (99%)</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="snap-section bg-black py-20 px-6 overflow-y-auto">
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="card">
+                <p class="text-orange-500 font-bold text-xs tracking-widest mb-4">MIDJOURNEY V6.1</p>
+                <ul class="text-zinc-400 text-sm space-y-2 mb-8 list-disc pl-4">
+                    <li>더 정밀해진 텍스트 렌더링 및 레이아웃 유지력 강화</li>
+                    <li>--sref를 통한 일관된 스타일 참조 기능 고도화</li>
+                    <li>피부 질감 등 극사실적 표현력 추가</li>
+                </ul>
+                <div class="stat-value">85%</div>
+            </div>
+            <div class="card">
+                <p class="text-orange-500 font-bold text-xs tracking-widest mb-4">OPENAI SORA</p>
+                <ul class="text-zinc-400 text-sm space-y-2 mb-8 list-disc pl-4">
+                    <li>최대 60초 고화질 동영상 생성 기능</li>
+                    <li>복잡한 물리 법칙 시뮬레이션 구현</li>
+                    <li>다각도 카메라 워킹 및 캐릭터 일관성 유지</li>
+                </ul>
+                <div class="stat-value">92%</div>
+            </div>
+            <div class="card">
+                <p class="text-orange-500 font-bold text-xs tracking-widest mb-4">UI/UX AI (FIGMA AI/V0.DEV)</p>
+                <ul class="text-zinc-400 text-sm space-y-2 mb-8 list-disc pl-4">
+                    <li>텍스트 기반 반응형 컴포넌트 자동 생성</li>
+                    <li>디자인 시스템 학습 맞춤형 프로토타입 구현</li>
+                    <li>코드 기반 인터페이스 즉시 익스포트</li>
+                </ul>
+                <div class="stat-value">78%</div>
+            </div>
+            <div class="card">
+                <p class="text-orange-500 font-bold text-xs tracking-widest mb-4">GENERATIVE MEDIA</p>
+                <ul class="text-zinc-400 text-sm space-y-2 mb-8 list-disc pl-4">
+                    <li>실시간 음성 변조 및 페이스 스와프 정밀도 향상</li>
+                    <li>저해상도 소스의 8K급 AI 업스케일링</li>
+                    <li>가짜 뉴스 및 이미지의 자동 확산 기술</li>
+                </ul>
+                <div class="stat-value">99%</div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    const bg = document.getElementById('hero-bg');
+    const spot = document.getElementById('spotlight');
+    const cursor = document.getElementById('cursor');
+
+    window.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+        const xPct = (e.clientX / window.innerWidth) * 100;
+        const yPct = (e.clientY / window.innerHeight) * 100;
+        spot.style.setProperty('--x', `${xPct}%`);
+        spot.style.setProperty('--y', `${yPct}%`);
+        const moveX = (e.clientX - window.innerWidth/2) / 35;
+        const moveY = (e.clientY - window.innerHeight/2) / 35;
+        bg.style.transform = `translate(${-moveX}px, ${-moveY}px) scale(1.1)`;
+    });
+</script>
 </body>
 </html>
