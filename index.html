@@ -7,192 +7,126 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Noto+Sans+KR:wght@100;400;900&display=swap');
-        :root { --neon: #ff5f00; --red: #ff0000; }
-        * { cursor: none !important; }
-        body, html { margin: 0; padding: 0; background: #000; color: #fff; font-family: 'Noto Sans KR', sans-serif; overflow-x: hidden; scroll-behavior: smooth; }
+        :root { --neon: #ff5f00; --red: #ff4d4d; }
+        
+        /* 마우스 설정: 초기엔 기본, 접속 후 cursor: none */
+        body { background: #000; color: #fff; font-family: 'Noto Sans KR', sans-serif; overflow-x: hidden; }
+        body.system-ready { cursor: none !important; }
+        body.system-ready * { cursor: none !important; }
 
-        /* CRT 스캔라인 효과 */
-        body::before {
-            content: " "; display: block; position: fixed; top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            z-index: 9998; background-size: 100% 2px, 3px 100%; pointer-events: none;
+        /* 배경 그리드 (빈 공간 메우기) */
+        .bg-grid {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(to right, #111 1px, transparent 1px), linear-gradient(to bottom, #111 1px, transparent 1px);
+            background-size: 50px 50px; z-index: -2; pointer-events: none; opacity: 0.3;
         }
 
-        /* 커스텀 커서 */
+        /* 커스텀 커서 (초기 숨김) */
         #cursor {
             position: fixed; width: 25px; height: 25px; border: 2px solid var(--neon);
             border-radius: 50%; pointer-events: none; transform: translate(-50%, -50%);
-            z-index: 9999; box-shadow: 0 0 15px var(--neon); transition: transform 0.1s;
+            z-index: 9999; box-shadow: 0 0 15px var(--neon); display: none;
         }
+        body.system-ready #cursor { display: block; }
 
         /* 진입 오버레이 */
         #overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000;
-            z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            position: fixed; inset: 0; background: #000; z-index: 10000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
-        .access-btn {
-            font-family: 'Orbitron'; color: var(--neon); border: 1px solid var(--neon);
-            padding: 1.5rem 3rem; letter-spacing: 5px; transition: 0.3s;
-        }
-        .access-btn:hover { background: var(--neon); color: #000; box-shadow: 0 0 30px var(--neon); }
+        .access-btn { font-family: 'Orbitron'; color: var(--neon); border: 1px solid var(--neon); padding: 1.5rem 3rem; letter-spacing: 5px; cursor: pointer; }
 
-        /* 섹션 공통 */
-        .snap-section { min-height: 100vh; position: relative; padding: 100px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        /* 섹션 레이아웃 수정 */
+        .snap-section { min-height: 80vh; padding: 120px 20px; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         
         /* 히어로 배경 */
         .hero-bg {
-            position: absolute; top: 0; left: 0; width: 110%; height: 110%;
-            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.9)), url('bg.jpg') center/cover no-repeat;
-            z-index: -1; will-change: transform;
-        }
-        .spotlight {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), transparent 10%, rgba(0,0,0,0.95) 50%);
-            z-index: 1; pointer-events: none;
+            position: absolute; inset: 0; background: linear-gradient(rgba(0,0,0,0.4), #000), url('bg.jpg') center/cover no-repeat;
+            z-index: -1; transform: scale(1.1); transition: 0.1s;
         }
 
         /* 타이틀 글리치 */
-        .glitch-title {
-            font-family: 'Orbitron', sans-serif; font-size: clamp(3rem, 10vw, 6rem);
-            color: var(--neon); text-shadow: 0 0 20px var(--neon); line-height: 1;
-            animation: glitch 5s infinite;
-        }
-        @keyframes glitch { 0%, 90% { transform: skew(0); } 91% { transform: skew(5deg); text-shadow: 2px 0 red; } 92% { transform: skew(-5deg); text-shadow: -2px 0 blue; } }
+        .glitch-title { font-family: 'Orbitron'; font-size: clamp(3rem, 10vw, 6rem); color: var(--neon); text-shadow: 0 0 20px var(--neon); animation: glitch 4s infinite; text-align: center; line-height: 1.1; }
+        @keyframes glitch { 0%, 90% { transform: skew(0); } 91% { transform: skew(3deg); text-shadow: 2px 0 red; } 92% { transform: skew(-3deg); text-shadow: -2px 0 blue; } }
 
         /* 카드 고도화 */
-        .card { background: rgba(10, 10, 10, 0.8); border: 1px solid #333; padding: 2.5rem; transition: 0.5s; opacity: 0; transform: translateY(40px); }
+        .card { background: rgba(10, 10, 10, 0.9); border: 1px solid #222; padding: 2.5rem; transition: 0.5s; opacity: 0; transform: translateY(30px); }
         .card.visible { opacity: 1; transform: translateY(0); }
-        .card.overload { border-color: var(--red); box-shadow: 0 0 30px var(--red); }
-        .vote-count { font-family: 'Orbitron'; font-size: 2rem; color: var(--neon); }
+        .card:hover { border-color: var(--neon); }
+        .card.overload { border-color: var(--red); box-shadow: 0 0 40px rgba(255, 77, 77, 0.3); }
 
-        /* 타임라인 */
-        .timeline-line { width: 2px; background: var(--neon); height: 0; transition: 2s; }
+        /* 타임라인 가시성 강화 */
+        .timeline-line { width: 1px; background: #333; height: 0; transition: 1.5s; margin: 40px 0; }
         .timeline-item { opacity: 0; transition: 1s; }
         .timeline-item.visible { opacity: 1; }
 
-        /* 글로벌 맵 로그 */
-        #log-container { font-family: 'Orbitron'; font-size: 0.7rem; color: #0f0; overflow: hidden; height: 150px; border: 1px solid #111; padding: 10px; width: 100%; max-width: 500px; }
+        /* 라이브 로그 섹션 (의미 전달 강화) */
+        .log-box { border: 1px solid #222; background: #050505; padding: 20px; font-family: 'Orbitron'; font-size: 0.7rem; color: #0f0; width: 100%; max-width: 600px; height: 200px; overflow: hidden; position: relative; }
+        .log-box::before { content: "LIVE CRISIS FEED"; position: absolute; top: 0; right: 10px; font-size: 10px; color: #050; }
     </style>
 </head>
 <body>
 
 <div id="cursor"></div>
+<div class="bg-grid"></div>
 
 <div id="overlay">
-    <p class="font-mono text-[10px] text-zinc-500 mb-4 tracking-[0.5em]">[ ACCESS RESTRICTED ]</p>
+    <h2 class="font-orbitron text-[10px] tracking-[1em] text-zinc-600 mb-8">SECURE CONNECTION REQUIRED</h2>
     <button class="access-btn" onclick="initSystem()">ENTER SYSTEM</button>
 </div>
 
 <div id="main-content" style="display:none;">
     
-    <section class="hero snap-section overflow-hidden">
+    <section class="hero snap-section">
         <div class="hero-bg" id="hero-bg"></div>
-        <div class="spotlight" id="spotlight"></div>
-        <div class="relative z-10 text-center">
-            <p class="text-[10px] tracking-[2em] text-orange-500/60 mb-6 font-bold uppercase">System Loaded Successfully</p>
+        <div class="relative z-10">
+            <p class="text-[10px] tracking-[1.5em] text-orange-500/50 mb-6 text-center">ANALYZING DISPLACEMENT DATA</p>
             <h1 class="glitch-title">위기의<br>디자이너들</h1>
         </div>
     </section>
 
-    <section class="snap-section bg-zinc-950">
-        <h2 class="font-black text-4xl mb-16 tracking-tighter">UPDATE ARCHIVE</h2>
-        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8" id="card-grid">
-            <div class="card">
-                <p class="font-mono text-[10px] text-orange-500 mb-1">UPDATED: 2026.02.12</p>
+    <section class="snap-section bg-black">
+        <h2 class="font-orbitron text-zinc-800 text-6xl absolute top-10 left-10 opacity-20 pointer-events-none">ARCHIVE</h2>
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10">
+            <div class="card" data-idx="0">
+                <p class="font-orbitron text-[9px] text-orange-600 mb-1">2026.02.12</p>
                 <h3 class="font-black text-xl mb-4 font-orbitron">GENERATIVE MEDIA</h3>
-                <ul class="text-zinc-500 text-sm space-y-2 mb-10 list-disc pl-4">
-                    <li>실시간 음성 변조 및 페이스 스와프 정밀도 향상</li>
-                    <li>저해상도 소스의 8K급 AI 업스케일링</li>
-                    <li>가짜 뉴스 및 이미지의 자동 확산 기술</li>
-                </ul>
-                <div class="flex justify-between items-center border-t border-zinc-800 pt-6">
-                    <div><span class="vote-count" data-target="5201">0</span></div>
-                    <button class="border border-orange-500 text-orange-500 px-6 py-2 text-xs font-bold" onclick="handleVote(this, 0)">CRISIS VOTE</button>
+                <p class="text-zinc-500 text-sm mb-10">실시간 페이스 스와프 및 8K AI 업스케일링을 통한 가짜 뉴스 자동 확산 기술.</p>
+                <div class="flex justify-between items-end border-t border-zinc-900 pt-6">
+                    <span class="font-orbitron text-2xl text-orange-500 vote-val" data-target="5201">0</span>
+                    <button class="border border-orange-500/30 text-orange-500 px-6 py-2 text-[10px] font-bold hover:bg-orange-500 hover:text-black transition" onclick="handleVote(this, 0)">VOTE CRISIS</button>
                 </div>
             </div>
-            <div class="card">
-                <p class="font-mono text-[10px] text-orange-500 mb-1">UPDATED: 2026.02.11</p>
+            <div class="card" data-idx="1">
+                <p class="font-orbitron text-[9px] text-orange-600 mb-1">2026.02.11</p>
                 <h3 class="font-black text-xl mb-4 font-orbitron">OPENAI SORA</h3>
-                <ul class="text-zinc-500 text-sm space-y-2 mb-10 list-disc pl-4">
-                    <li>최대 60초 고화질 동영상 생성 기능</li>
-                    <li>복잡한 물리 법칙 시뮬레이션 구현</li>
-                    <li>다각도 카메라 워킹 및 캐릭터 일관성 유지</li>
-                </ul>
-                <div class="flex justify-between items-center border-t border-zinc-800 pt-6">
-                    <div><span class="vote-count" data-target="3892">0</span></div>
-                    <button class="border border-orange-500 text-orange-500 px-6 py-2 text-xs font-bold" onclick="handleVote(this, 1)">CRISIS VOTE</button>
+                <p class="text-zinc-500 text-sm mb-10">물리 법칙을 완벽히 모사하는 최대 60초 분량의 고화질 동영상 생성 기능.</p>
+                <div class="flex justify-between items-end border-t border-zinc-900 pt-6">
+                    <span class="font-orbitron text-2xl text-orange-500 vote-val" data-target="3892">0</span>
+                    <button class="border border-orange-500/30 text-orange-500 px-6 py-2 text-[10px] font-bold hover:bg-orange-500 hover:text-black transition" onclick="handleVote(this, 1)">VOTE CRISIS</button>
                 </div>
             </div>
-            <div class="card">
-                <p class="font-mono text-[10px] text-orange-500 mb-1">UPDATED: 2026.02.10</p>
-                <h3 class="font-black text-xl mb-4 font-orbitron">MIDJOURNEY V6.1</h3>
-                <ul class="text-zinc-500 text-sm space-y-2 mb-10 list-disc pl-4">
-                    <li>더 정밀해진 텍스트 렌더링 및 레이아웃 유지력 강화</li>
-                    <li>--sref를 통한 일관된 스타일 참조 기능 고도화</li>
-                    <li>피부 질감 등 극사실적 표현력 추가</li>
-                </ul>
-                <div class="flex justify-between items-center border-t border-zinc-800 pt-6">
-                    <div><span class="vote-count" data-target="1240">0</span></div>
-                    <button class="border border-orange-500 text-orange-500 px-6 py-2 text-xs font-bold" onclick="handleVote(this, 2)">CRISIS VOTE</button>
-                </div>
             </div>
-            <div class="card">
-                <p class="font-mono text-[10px] text-orange-500 mb-1">UPDATED: 2026.02.05</p>
-                <h3 class="font-black text-xl mb-4 font-orbitron">UI/UX AI (FIGMA/V0)</h3>
-                <ul class="text-zinc-500 text-sm space-y-2 mb-10 list-disc pl-4">
-                    <li>텍스트 기반 반응형 컴포넌트 자동 생성</li>
-                    <li>디자인 시스템 학습 맞춤형 프로토타입 구현</li>
-                    <li>코드 기반 인터페이스 즉시 익스포트</li>
-                </ul>
-                <div class="flex justify-between items-center border-t border-zinc-800 pt-6">
-                    <div><span class="vote-count" data-target="954">0</span></div>
-                    <button class="border border-orange-500 text-orange-500 px-6 py-2 text-xs font-bold" onclick="handleVote(this, 3)">CRISIS VOTE</button>
-                </div>
-            </div>
+    </section>
+
+    <section class="snap-section">
+        <div class="timeline-item text-center">
+            <p class="font-orbitron text-orange-500 text-xs">2024: THE EMERGENCE</p>
+            <p class="text-zinc-600 text-sm mt-2">생성형 AI의 디자인 대중화</p>
+        </div>
+        <div class="timeline-line" id="timeline-line"></div>
+        <div class="timeline-item text-center">
+            <p class="font-orbitron text-red-600 text-xl">2026: DISPLACEMENT</p>
+            <p class="text-zinc-400 mt-2">전 세계 디자이너 직무 잠식율 70% 도달</p>
         </div>
     </section>
 
     <section class="snap-section bg-black">
-        <h2 class="font-orbitron text-2xl text-orange-500 mb-12">DESTRUCTION TIMELINE</h2>
-        <div class="flex flex-col items-center space-y-12">
-            <div class="timeline-item text-center">
-                <p class="font-orbitron text-orange-500">2024</p>
-                <p class="text-zinc-400">생성형 AI의 디자인 대중화</p>
-            </div>
-            <div class="timeline-line" id="timeline-line"></div>
-            <div class="timeline-item text-center">
-                <p class="font-orbitron text-orange-500">2026</p>
-                <p class="text-zinc-400 font-bold text-xl">직무 잠식율 70% 도달</p>
-            </div>
-            <div class="timeline-item text-center">
-                <p class="font-orbitron text-red-600">2030</p>
-                <p class="text-zinc-600">인간 디자이너 개념의 소멸</p>
-            </div>
+        <div class="text-center mb-10">
+            <h2 class="font-orbitron text-orange-500 text-xl">GLOBAL CRISIS MONITORING</h2>
+            <p class="text-zinc-600 text-xs mt-2 uppercase">Real-time data collection from design sectors worldwide</p>
         </div>
-    </section>
-
-    <section class="snap-section bg-zinc-950 px-4">
-        <h2 class="font-black text-3xl mb-12 text-center">DEATH OR REBIRTH</h2>
-        <div class="flex flex-col md:flex-row gap-10 w-full max-w-4xl">
-            <button onclick="choice('rebirth')" class="flex-1 border border-zinc-800 p-10 hover:border-green-500 transition group text-center">
-                <h4 class="font-orbitron text-2xl group-hover:text-green-500">REBIRTH</h4>
-                <p class="text-xs text-zinc-500 mt-4">AI와의 전면적 공생</p>
-            </button>
-            <button onclick="choice('death')" class="flex-1 border border-zinc-800 p-10 hover:border-red-600 transition group text-center">
-                <h4 class="font-orbitron text-2xl group-hover:text-red-600">DEATH</h4>
-                <p class="text-xs text-zinc-500 mt-4">인간 디자인의 순수성 고수</p>
-            </button>
-        </div>
-    </section>
-
-    <section class="snap-section bg-black">
-        <h2 class="font-orbitron text-xl text-orange-500 mb-8">GLOBAL CRISIS STATUS</h2>
-        <div class="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-            <div class="opacity-30">
-                <div class="w-full h-48 border border-zinc-800 flex items-center justify-center font-orbitron text-[8px] text-zinc-700">WORLD MAP DATA FEEDING...</div>
-            </div>
-            <div id="log-container"></div>
-        </div>
+        <div class="log-box" id="log-box"></div>
     </section>
 </div>
 
@@ -200,100 +134,58 @@
     const cursor = document.getElementById('cursor');
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-    // 마우스 커서 & 스포트라이트
-    window.addEventListener('mousemove', (e) => {
-        cursor.style.left = e.clientX + 'px';
-        cursor.style.top = e.clientY + 'px';
-        const spot = document.getElementById('spotlight');
-        if(spot) {
-            const xPct = (e.clientX / window.innerWidth) * 100;
-            const yPct = (e.clientY / window.innerHeight) * 100;
-            spot.style.setProperty('--x', `${xPct}%`);
-            spot.style.setProperty('--y', `${yPct}%`);
-        }
-        const bg = document.getElementById('hero-bg');
-        if(bg) {
-            const moveX = (e.clientX - window.innerWidth/2) / 40;
-            const moveY = (e.clientY - window.innerHeight/2) / 40;
-            bg.style.transform = `translate(${-moveX}px, ${-moveY}px) scale(1.1)`;
-        }
-    });
-
-    // 사운드 함수
-    function playSound(freq, type, dur) {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = type; osc.frequency.value = freq;
-        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
-        osc.connect(gain); gain.connect(audioCtx.destination);
-        osc.start(); osc.stop(audioCtx.currentTime + dur);
-    }
-
-    // 시스템 접속
     function initSystem() {
-        playSound(200, 'square', 0.5);
+        document.body.classList.add('system-ready');
         document.getElementById('overlay').style.display = 'none';
         document.getElementById('main-content').style.display = 'block';
-        startGlobalLog();
+        startLog();
     }
 
-    // 투표 기능 & 애니메이션
-    function animateCount(el, target) {
-        let start = 0;
-        const inc = target / 60;
-        const update = () => {
-            start += inc;
-            if (start < target) { el.innerText = Math.floor(start).toLocaleString(); requestAnimationFrame(update); }
-            else { el.innerText = target.toLocaleString(); }
-        };
-        update();
-    }
+    window.addEventListener('mousemove', (e) => {
+        if(!document.body.classList.contains('system-ready')) return;
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+        const moveX = (e.clientX - window.innerWidth/2) / 40;
+        const moveY = (e.clientY - window.innerHeight/2) / 40;
+        document.getElementById('hero-bg').style.transform = `translate(${-moveX}px, ${-moveY}px) scale(1.1)`;
+    });
 
     function handleVote(btn, idx) {
-        playSound(800, 'sine', 0.1);
-        const countEl = document.querySelectorAll('.vote-count')[idx];
+        const val = document.querySelectorAll('.vote-val')[idx];
         const card = btn.closest('.card');
-        let target = parseInt(countEl.getAttribute('data-target')) + 1;
-        countEl.setAttribute('data-target', target);
-        countEl.innerText = target.toLocaleString();
-        btn.innerText = "VOTED"; btn.disabled = true;
+        let count = parseInt(val.getAttribute('data-target')) + 1;
+        val.setAttribute('data-target', count);
+        val.innerText = count.toLocaleString();
         card.classList.add('overload');
+        btn.innerText = "REPORTED"; btn.disabled = true;
     }
 
-    // 스크롤 관찰
-    const observer = new IntersectionObserver((entries) => {
+    const obs = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-            if (entry.isIntersecting) {
+            if(entry.isIntersecting) {
                 entry.target.classList.add('visible');
-                if (entry.target.classList.contains('card')) {
-                    animateCount(entry.target.querySelector('.vote-count'), parseInt(entry.target.querySelector('.vote-count').getAttribute('data-target')));
+                if(entry.target.id === 'timeline-line') entry.target.style.height = '150px';
+                const v = entry.target.querySelector('.vote-val');
+                if(v && v.innerText === "0") {
+                    let t = parseInt(v.getAttribute('data-target')), s = 0;
+                    const anim = () => { s += t/50; if(s<t){ v.innerText=Math.floor(s).toLocaleString(); requestAnimationFrame(anim); }else{ v.innerText=t.toLocaleString(); } };
+                    anim();
                 }
-                if (entry.target.id === 'timeline-line') { entry.target.style.height = '300px'; }
             }
         });
     }, { threshold: 0.2 });
 
-    document.querySelectorAll('.card, .timeline-item, #timeline-line').forEach(el => observer.observe(el));
+    document.querySelectorAll('.card, .timeline-item, #timeline-line').forEach(el => obs.observe(el));
 
-    // 선택 인터랙션
-    function choice(type) {
-        playSound(type === 'death' ? 100 : 400, 'sawtooth', 0.3);
-        alert(type === 'death' ? "인간의 가치를 선택하셨습니다. 시스템이 경고를 발령합니다." : "AI와의 공생을 선택하셨습니다. 진화가 시작됩니다.");
-    }
-
-    // 글로벌 로그 시뮬레이션
-    function startGlobalLog() {
-        const container = document.getElementById('log-container');
-        const cities = ["Seoul", "New York", "London", "Tokyo", "Berlin", "Paris"];
+    function startLog() {
+        const box = document.getElementById('log-box');
+        const msgs = ["DETECTING API...", "SEOUL: 88% THREAT", "TOKYO: JOB LOSS DETECTED", "NEW YORK: AI OVERTAKE", "SYSTEM STABLE..."];
         setInterval(() => {
-            const city = cities[Math.floor(Math.random()*cities.length)];
-            const level = Math.floor(Math.random()*40 + 60);
             const p = document.createElement('p');
-            p.innerText = `> DETECTED: ${city} CRISIS LEVEL ${level}%...`;
-            container.prepend(p);
-            if(container.children.length > 8) container.removeChild(container.lastChild);
-        }, 2000);
+            p.innerText = `> ${msgs[Math.floor(Math.random()*msgs.length)]} [${new Date().toLocaleTimeString()}]`;
+            box.prepend(p);
+            if(box.children.length > 8) box.removeChild(box.lastChild);
+        }, 1500);
     }
 </script>
 </body>
