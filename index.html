@@ -6,96 +6,139 @@
     <title>위기의 디자이너들 | CRISIS DESIGNERS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Noto+Sans+KR:wght@300;900&display=swap');
 
-        /* 1. 배경 이미지 설정: 우리가 뽑은 그 이미지를 배경으로 박습니다 */
-        .bg-cyber {
-            background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.9)), 
-                              url('https://r.jina.ai/i/05e2528731d14e7a836d5a8649f87258'); /* 레퍼런스 이미지 경로 */
+        body, html {
+            margin: 0; padding: 0;
+            background-color: #000;
+            color: #fff;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        /* [배경] 레퍼런스 이미지의 웅장한 느낌 재현 */
+        .hero {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.9)), 
+                              url('https://images.unsplash.com/photo-1614850523296-d8c1af93d400?auto=format&fit=crop&q=80&w=2070');
             background-size: cover;
             background-position: center;
-            background-attachment: fixed; /* 스크롤해도 배경은 고정되어 깊이감을 줌 */
+            background-attachment: fixed;
         }
 
-        .hero-title {
-            font-family: 'Orbitron', sans-serif;
-            color: #ff6600;
-            text-shadow: 0 0 15px rgba(255,102,0,0.8), 0 0 30px rgba(255,102,0,0.5);
-            line-height: 1.2;
-            word-break: keep-all;
+        /* [중앙 박스] 오타 수정: 위기의 디자이너들 */
+        .main-frame {
+            z-index: 10;
+            padding: 4rem;
+            border: 1px solid rgba(255, 95, 0, 0.4);
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(15px);
+            text-align: center;
+            box-shadow: 0 0 50px rgba(255, 95, 0, 0.1);
         }
 
-        /* 중앙 사각 프레임 디테일 */
-        .frame-box {
-            border: 1px solid rgba(255, 102, 0, 0.4);
-            backdrop-filter: blur(5px); /* 배경 이미지가 살짝 비치되 글씨가 잘 보이게 */
-            background: rgba(0, 0, 0, 0.2);
-            padding: 3rem;
+        .neon-title {
+            font-family: 'Orbitron', 'Noto Sans KR', sans-serif;
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            color: #ff5f00;
+            text-shadow: 0 0 15px #ff5f00, 0 0 30px #ff5f00;
+            font-weight: 900;
+            margin: 0;
+            letter-spacing: -0.02em;
+        }
+
+        /* [피드] 카드 4개 복구 및 디자인 강화 */
+        .feed-section {
+            background: #050505;
+            padding: 120px 20px;
+        }
+
+        .crisis-card {
+            background: #111;
+            border: 1px solid #222;
+            padding: 2rem;
             position: relative;
+            transition: 0.3s;
         }
 
-        /* 모서리 장식 코드 */
-        .corner { position: absolute; width: 20px; height: 20px; border: 2px solid #ff6600; }
-        .top-l { top: -2px; left: -2px; border-right: 0; border-bottom: 0; }
-        .top-r { top: -2px; right: -2px; border-left: 0; border-bottom: 0; }
-        .bot-l { bottom: -2px; left: -2px; border-right: 0; border-top: 0; }
-        .bot-r { bottom: -2px; right: -2px; border-left: 0; border-top: 0; }
-
-        /* 피드 카드: 투명도 조절로 배경 이미지와 조화 */
-        .glass-card {
-            background: rgba(15, 15, 15, 0.85);
-            border: 1px solid rgba(255, 102, 0, 0.2);
-            backdrop-filter: blur(10px);
+        .crisis-card:hover {
+            border-color: #ff5f00;
+            box-shadow: 0 0 30px rgba(255, 95, 0, 0.1);
+            transform: translateY(-5px);
         }
 
+        .card-tag {
+            font-size: 10px;
+            color: #ff5f00;
+            letter-spacing: 0.3em;
+            font-weight: bold;
+        }
+
+        .snap-container {
+            height: 100vh;
+            overflow-y: auto;
+            scroll-snap-type: y mandatory;
+        }
         section { scroll-snap-align: start; }
-        .snap-container { height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; }
     </style>
 </head>
-<body class="bg-black text-white">
+<body>
 
 <div class="snap-container">
-    <section class="hero bg-cyber h-screen flex flex-col justify-center items-center px-6">
-        <div class="frame-box animate__animated animate__fadeIn">
-            <div class="corner top-l"></div><div class="corner top-r"></div>
-            <div class="corner bot-l"></div><div class="corner bot-r"></div>
-            
-            <p class="text-orange-500/60 tracking-[1em] text-[10px] mb-6 text-center">THE REMAINING BLACK SERIES</p>
-            <h1 class="hero-title text-5xl md:text-7xl font-black text-center mb-8">
-                위외 디즈이어들
-            </h1>
-            <div class="w-24 h-[1px] bg-orange-500 mx-auto mb-8"></div>
-            <p class="text-orange-500 tracking-[0.4em] text-xs text-center font-bold">LIVE AI THREAT LEVEL</p>
-        </div>
-        
-        <div class="absolute bottom-10 animate-bounce">
-            <p class="text-[10px] text-zinc-500 tracking-widest">SCROLL TO ANALYZE</p>
+    <section class="hero">
+        <div class="main-frame">
+            <p class="text-[10px] tracking-[1.5em] text-orange-500/60 mb-8 uppercase font-bold">The Designer's Doomsday</p>
+            <h1 class="neon-title">위기의 디자이너들</h1>
+            <div class="w-16 h-[1px] bg-orange-500/50 mx-auto my-8"></div>
+            <p class="text-orange-500 tracking-[0.6em] text-[10px] font-bold uppercase">Live AI Threat Level: Extreme</p>
         </div>
     </section>
 
-    <section class="min-h-screen bg-[#050505] py-20 px-6">
-        <div class="max-w-5xl mx-auto">
-            <h2 class="text-zinc-700 font-bold tracking-[1.5em] text-center mb-20 text-xs">AI THREAT FEED</h2>
+    <section class="feed-section">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-zinc-800 text-[10px] tracking-[2.5em] text-center mb-24 font-bold uppercase">Threat Analysis Feed</h2>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="glass-card p-8 group hover:border-orange-500 transition-all">
-                    <div class="flex justify-between items-start mb-10">
-                        <div>
-                            <p class="text-[10px] text-orange-500 mb-2 font-mono">CRISIS LEVEL</p>
-                            <h3 class="text-3xl font-bold tracking-tighter">MIDJOURNEY 6.1</h3>
-                        </div>
-                        <span class="text-5xl font-black text-orange-600">85%</span>
-                    </div>
-                    <p class="text-zinc-500 text-sm italic mb-10">"The distinction between pixel and reality is dead."</p>
-                    <div class="flex gap-4">
-                        <button class="bg-orange-600 text-black font-bold text-[10px] px-6 py-2 uppercase">Vote Crisis</button>
-                        <button class="border border-zinc-800 text-zinc-600 text-[10px] px-6 py-2 hover:text-white uppercase">Official Site</button>
-                    </div>
-                </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="feed-container">
                 </div>
         </div>
     </section>
 </div>
+
+<script>
+    const tools = [
+        { name: "Midjourney v6.1", date: "2026.02.10", desc: "극사실주의 텍스트 렌더링 완성. 상업 사진 작가 위기.", level: 85 },
+        { name: "Sora Video Gen", date: "2026.02.05", desc: "1분 이상의 고화질 물리 법칙 시뮬레이션 영상 생성.", level: 92 },
+        { name: "Figma AI Copilot", date: "2026.01.28", desc: "와이어프레임 자동 생성 및 디자인 시스템 일관성 관리.", level: 65 },
+        { name: "Adobe Firefly Video", date: "2026.01.15", desc: "기존 영상 소스 자동 편집 및 배경 확장 기능.", level: 78 }
+    ];
+
+    const container = document.getElementById('feed-container');
+
+    tools.forEach(tool => {
+        container.innerHTML += `
+            <div class="crisis-card group">
+                <div class="flex justify-between items-start mb-8">
+                    <div>
+                        <span class="card-tag uppercase">${tool.date} UPDATE</span>
+                        <h3 class="text-3xl font-black mt-2 tracking-tighter">${tool.name}</h3>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-[40px] font-black text-orange-600 leading-none">${tool.level}%</p>
+                        <p class="text-[9px] text-zinc-600 tracking-tighter mt-1 uppercase font-bold">Threat Index</p>
+                    </div>
+                </div>
+                <p class="text-zinc-500 text-sm leading-relaxed mb-10 h-10">"${tool.desc}"</p>
+                <div class="flex gap-4 pt-6 border-t border-zinc-900">
+                    <button class="bg-orange-600 text-black font-bold text-[10px] px-6 py-2 hover:bg-white transition-colors uppercase">Vote Crisis</button>
+                    <button class="border border-zinc-800 text-zinc-600 text-[10px] px-6 py-2 hover:text-white transition-colors uppercase">Official Site</button>
+                </div>
+            </div>
+        `;
+    });
+</script>
 
 </body>
 </html>
