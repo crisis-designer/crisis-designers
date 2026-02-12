@@ -9,12 +9,10 @@
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Noto+Sans+KR:wght@100;400;900&display=swap');
         :root { --neon: #ff5f00; --red: #ff4d4d; --bg: #050505; }
         
-        /* 기본 설정: 진입 전에는 마우스가 보임 */
         body { background: var(--bg); color: #fff; font-family: 'Noto Sans KR', sans-serif; overflow-x: hidden; margin: 0; }
         body.system-ready { cursor: none !important; }
         body.system-ready * { cursor: none !important; }
 
-        /* 배경 디테일: 빈 공간을 채우는 그리드와 스캔라인 */
         .bg-overlay {
             position: fixed; inset: 0; z-index: -1; opacity: 0.3;
             background-image: radial-gradient(#1a1a1a 1px, transparent 1px);
@@ -26,7 +24,6 @@
             background-size: 100% 4px; opacity: 0.15;
         }
 
-        /* 커스텀 커서 */
         #cursor {
             position: fixed; width: 20px; height: 20px; border: 2px solid var(--neon);
             border-radius: 50%; pointer-events: none; transform: translate(-50%, -50%);
@@ -34,7 +31,6 @@
         }
         body.system-ready #cursor { display: block; }
 
-        /* 진입 오버레이 */
         #overlay {
             position: fixed; inset: 0; background: #000; z-index: 10000;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -45,10 +41,8 @@
         }
         .access-btn:hover { background: var(--neon); color: #000; box-shadow: 0 0 30px var(--neon); }
 
-        /* 섹션 레이아웃: 공백 최적화 */
         .snap-section { min-height: 90vh; padding: 80px 20px; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         
-        /* 히어로 연출 */
         .hero-bg {
             position: absolute; inset: 0; z-index: -1;
             background: linear-gradient(rgba(0,0,0,0.3), var(--bg)), url('bg.jpg') center/cover no-repeat;
@@ -59,7 +53,6 @@
             color: var(--neon); text-shadow: 0 0 20px var(--neon); line-height: 1.1; text-align: center;
         }
 
-        /* 카드 디자인: 4개 고정 레이아웃 */
         .card { 
             background: rgba(10, 10, 10, 0.9); border: 1px solid #1a1a1a; padding: 2rem; 
             transition: 0.5s; opacity: 0; transform: translateY(30px);
@@ -68,12 +61,10 @@
         .card:hover { border-color: var(--neon); box-shadow: 0 0 25px rgba(255, 95, 0, 0.1); }
         .card.overload { border-color: var(--red); box-shadow: 0 0 40px rgba(255, 77, 77, 0.2); }
 
-        /* 타임라인 연출 */
         .timeline-line { width: 1px; background: #222; height: 0; transition: 1.5s ease-in-out; margin: 30px 0; }
         .timeline-item { opacity: 0; transition: 1s; text-align: center; }
         .timeline-item.visible { opacity: 1; }
 
-        /* 모니터링 로그 섹션 */
         .monitor-frame { 
             border: 1px solid #1a1a1a; background: #000; padding: 20px; 
             width: 100%; max-width: 700px; position: relative;
@@ -112,7 +103,11 @@
             <div class="card" data-idx="0">
                 <p class="font-orbitron text-[9px] text-orange-600 mb-1">UPDATED: 2026.02.12</p>
                 <h3 class="font-black text-xl mb-4 font-orbitron uppercase">Generative Media</h3>
-                <p class="text-zinc-500 text-sm mb-10 leading-relaxed">실시간 보이스/페이스 변조 및 8K AI 업스케일링을 통한 가짜 데이터 자동 확산.</p>
+                <ul class="text-zinc-500 text-sm mb-10 space-y-2 leading-relaxed">
+                    <li>• 실시간 페이스 스와프 및 8K급 해상도 복원 기술 완성</li>
+                    <li>• AI가 생성한 가짜 뉴스 및 딥페이크 데이터의 자동 확산</li>
+                    <li>• 인간의 눈으로 판별 불가능한 디지털 복제 인간 구현</li>
+                </ul>
                 <div class="flex justify-between items-end border-t border-zinc-900 pt-6">
                     <span class="font-orbitron text-2xl text-orange-500 vote-val" data-target="5201">0</span>
                     <button class="border border-orange-500/30 text-orange-500 px-5 py-2 text-[10px] font-bold hover:bg-orange-500 hover:text-black transition" onclick="handleVote(this, 0)">VOTE CRISIS</button>
@@ -122,7 +117,11 @@
             <div class="card" data-idx="1">
                 <p class="font-orbitron text-[9px] text-orange-600 mb-1">UPDATED: 2026.02.11</p>
                 <h3 class="font-black text-xl mb-4 font-orbitron uppercase">OpenAI Sora</h3>
-                <p class="text-zinc-500 text-sm mb-10 leading-relaxed">물리 법칙을 완벽히 모사하는 고화질 동영상 생성 기능으로 영상 제작 생태계 파괴.</p>
+                <ul class="text-zinc-500 text-sm mb-10 space-y-2 leading-relaxed">
+                    <li>• 중력, 충돌 등 복잡한 실제 물리 법칙을 시뮬레이션으로 구현</li>
+                    <li>• 프롬프트 한 줄로 60초 분량의 고화질 시네마틱 영상 생성</li>
+                    <li>• 다각도 카메라 워킹에서도 유지되는 캐릭터 일관성</li>
+                </ul>
                 <div class="flex justify-between items-end border-t border-zinc-900 pt-6">
                     <span class="font-orbitron text-2xl text-orange-500 vote-val" data-target="3892">0</span>
                     <button class="border border-orange-500/30 text-orange-500 px-5 py-2 text-[10px] font-bold hover:bg-orange-500 hover:text-black transition" onclick="handleVote(this, 1)">VOTE CRISIS</button>
@@ -132,7 +131,11 @@
             <div class="card" data-idx="2">
                 <p class="font-orbitron text-[9px] text-orange-600 mb-1">UPDATED: 2026.02.10</p>
                 <h3 class="font-black text-xl mb-4 font-orbitron uppercase">Midjourney V6.1</h3>
-                <p class="text-zinc-500 text-sm mb-10 leading-relaxed">정밀한 텍스트 렌더링과 스타일 참조 기능을 통한 상업용 이미지 시장 독점.</p>
+                <ul class="text-zinc-500 text-sm mb-10 space-y-2 leading-relaxed">
+                    <li>• 오타 없는 완벽한 타이포그래피 구현 및 레이아웃 유지</li>
+                    <li>• 특정 화풍 및 브랜드 아이덴티티의 완벽한 복사 (--sref)</li>
+                    <li>• 모공, 피부 질감, 반사광 등 극사실주의적 디테일 완성</li>
+                </ul>
                 <div class="flex justify-between items-end border-t border-zinc-900 pt-6">
                     <span class="font-orbitron text-2xl text-orange-500 vote-val" data-target="1240">0</span>
                     <button class="border border-orange-500/30 text-orange-500 px-5 py-2 text-[10px] font-bold hover:bg-orange-500 hover:text-black transition" onclick="handleVote(this, 2)">VOTE CRISIS</button>
@@ -142,7 +145,11 @@
             <div class="card" data-idx="3">
                 <p class="font-orbitron text-[9px] text-orange-600 mb-1">UPDATED: 2026.02.05</p>
                 <h3 class="font-black text-xl mb-4 font-orbitron uppercase">UI/UX AI (FIGMA/V0)</h3>
-                <p class="text-zinc-500 text-sm mb-10 leading-relaxed">디자인 시스템 기반의 인터페이스 자동 생성 및 코드 즉시 익스포트 기술 고도화.</p>
+                <ul class="text-zinc-500 text-sm mb-10 space-y-2 leading-relaxed">
+                    <li>• 텍스트 설명만으로 반응형 웹/앱 인터페이스 즉시 생성</li>
+                    <li>• 브랜드 가이드를 학습한 맞춤형 프로토타입 자동 제안</li>
+                    <li>• 결과물을 React, Tailwind 등 실제 개발 코드로 즉시 변환</li>
+                </ul>
                 <div class="flex justify-between items-end border-t border-zinc-900 pt-6">
                     <span class="font-orbitron text-2xl text-orange-500 vote-val" data-target="954">0</span>
                     <button class="border border-orange-500/30 text-orange-500 px-5 py-2 text-[10px] font-bold hover:bg-orange-500 hover:text-black transition" onclick="handleVote(this, 3)">VOTE CRISIS</button>
@@ -191,7 +198,6 @@
 <script>
     const cursor = document.getElementById('cursor');
 
-    // 시스템 시동
     function initApp() {
         document.body.classList.add('system-ready');
         document.getElementById('overlay').style.display = 'none';
@@ -199,17 +205,16 @@
         startLogs();
     }
 
-    // 마우스 및 패럴랙스
     window.addEventListener('mousemove', (e) => {
         if(!document.body.classList.contains('system-ready')) return;
         cursor.style.left = e.clientX + 'px';
         cursor.style.top = e.clientY + 'px';
         const moveX = (e.clientX - window.innerWidth/2) / 45;
         const moveY = (e.clientY - window.innerHeight/2) / 45;
-        document.getElementById('hero-bg').style.transform = `translate(${-moveX}px, ${-moveY}px) scale(1.05)`;
+        const heroBg = document.getElementById('hero-bg');
+        if(heroBg) heroBg.style.transform = `translate(${-moveX}px, ${-moveY}px) scale(1.05)`;
     });
 
-    // 투표 기능
     function handleVote(btn, idx) {
         const val = document.querySelectorAll('.vote-val')[idx];
         const card = btn.closest('.card');
@@ -220,7 +225,6 @@
         btn.innerText = "REPORTED"; btn.disabled = true;
     }
 
-    // 스크롤 감지 (카드 4개 및 타임라인)
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if(entry.isIntersecting) {
@@ -247,7 +251,6 @@
 
     document.querySelectorAll('.card, .timeline-item, #timeline-line').forEach(el => observer.observe(el));
 
-    // 실시간 로그 생성
     function startLogs() {
         const box = document.getElementById('log-box');
         const cities = ["SEOUL", "NYC", "LONDON", "TOKYO", "BERLIN"];
